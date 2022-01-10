@@ -1,0 +1,5 @@
+get_filename_component(lib221e_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set(lib221e_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+set(lib221e_LIBRARIES Muse Mitch)
+set(lib221e_EXECUTABLE MuseSerialTest MitchSerialTest MitchBLETest)
