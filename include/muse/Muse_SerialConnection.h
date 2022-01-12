@@ -147,18 +147,18 @@ namespace Muse
 			// Configuration
 
 			uint16_t getGyroscopeFullScale();
-			uint16_t getAccFullScale();
+			uint8_t getAccFullScale();
 			uint16_t getAccHdrFullScale();
-			uint16_t getMagnetometerFullScale();
-			uint16_t getLogMode();
-			uint16_t getLogFrequency();
+			uint8_t getMagnetometerFullScale();
+			uint8_t getLogMode();
+			uint8_t getLogFrequency();
 
-			bool setGyroscopeFullScale(const short value);
-			bool setAccelerometerFullScale(const short value);
-			bool setAccelerometerHDRFullScale(const short value);
-			bool setMagnetometerFullScale(const short value);
-			bool setLogMode(const short mode);
-			bool setLogFrequency(const short frequency);
+			bool setGyroscopeFullScale(const uint16_t value);
+			bool setAccelerometerFullScale(const uint8_t value);
+			bool setAccelerometerHDRFullScale(const uint16_t value);
+			bool setMagnetometerFullScale(const uint8_t value);
+			bool setLogMode(const uint8_t mode);
+			bool setLogFrequency(const uint8_t frequency);
 
 			// Calibration
 

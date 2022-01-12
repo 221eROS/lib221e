@@ -169,9 +169,9 @@ uint16_t Muse_SerialConnection::getGyroscopeFullScale() {
 	return gyroscope;
 }
 
-uint16_t Muse_SerialConnection::getAccFullScale() {
+uint8_t Muse_SerialConnection::getAccFullScale() {
 
-	uint16_t acc = 0;
+	uint8_t acc = 0;
 
 	if (!checkConnectionStatus())
 		return acc;
@@ -253,9 +253,9 @@ uint16_t Muse_SerialConnection::getAccHdrFullScale() {
 	return acc_hdr;
 }
 
-uint16_t Muse_SerialConnection::getMagnetometerFullScale() {
+uint8_t Muse_SerialConnection::getMagnetometerFullScale() {
 
-	uint16_t mag = 0;
+	uint8_t mag = 0;
 
 	if (!checkConnectionStatus())
 		return mag;
@@ -295,9 +295,9 @@ uint16_t Muse_SerialConnection::getMagnetometerFullScale() {
 	return mag;
 }
 
-uint16_t Muse_SerialConnection::getLogMode() {
+uint8_t Muse_SerialConnection::getLogMode() {
 
-	uint16_t log_mode = UINT16_MAX;
+	uint8_t log_mode = UINT8_MAX;
 
 	if (!checkConnectionStatus())
 		return log_mode;
@@ -322,9 +322,9 @@ uint16_t Muse_SerialConnection::getLogMode() {
 	return log_mode;
 }
 
-uint16_t Muse_SerialConnection::getLogFrequency() {
+uint8_t Muse_SerialConnection::getLogFrequency() {
 
-	uint16_t log_frequency = UINT16_MAX;
+	uint8_t log_frequency = UINT8_MAX;
 
 	if (!checkConnectionStatus())
 		return log_frequency;
@@ -349,7 +349,7 @@ uint16_t Muse_SerialConnection::getLogFrequency() {
 	return log_frequency;
 }
 
-bool Muse_SerialConnection::setGyroscopeFullScale(const short value)
+bool Muse_SerialConnection::setGyroscopeFullScale(const uint16_t value)
 {
 	bool out = true;
 	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
@@ -389,7 +389,7 @@ bool Muse_SerialConnection::setGyroscopeFullScale(const short value)
 
 }
 
-bool Muse_SerialConnection::setAccelerometerFullScale(const short value)
+bool Muse_SerialConnection::setAccelerometerFullScale(const uint8_t value)
 {
 	bool out = true;
 	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
@@ -431,7 +431,7 @@ bool Muse_SerialConnection::setAccelerometerFullScale(const short value)
 	return out;
 }
 
-bool Muse_SerialConnection::setAccelerometerHDRFullScale(const short value)
+bool Muse_SerialConnection::setAccelerometerHDRFullScale(const uint16_t value)
 {
 	bool out = true;
 	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
@@ -467,7 +467,7 @@ bool Muse_SerialConnection::setAccelerometerHDRFullScale(const short value)
 	return out;
 }
 
-bool Muse_SerialConnection::setMagnetometerFullScale(const short value)
+bool Muse_SerialConnection::setMagnetometerFullScale(const uint8_t value)
 {
 	bool out = true;
 	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
@@ -504,7 +504,7 @@ bool Muse_SerialConnection::setMagnetometerFullScale(const short value)
 	return out;
 }
 
-bool Muse_SerialConnection::setLogMode(const short mode)
+bool Muse_SerialConnection::setLogMode(const uint8_t mode)
 {
 	bool out = true;
 	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
@@ -530,7 +530,7 @@ bool Muse_SerialConnection::setLogMode(const short mode)
 	return out;
 }
 
-bool Muse_SerialConnection::setLogFrequency(const short frequency)
+bool Muse_SerialConnection::setLogFrequency(const uint8_t frequency)
 {
 	bool out = true;
 	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
@@ -1041,7 +1041,7 @@ EulerAngles Muse_SerialConnection::getRPY(uint8_t frequency) {
 
 uint32_t Muse_SerialConnection::getAvailableMemory() {
 
-	uint32_t out = {};
+	uint32_t out = 0;
 
 	if (!checkConnectionStatus())
 		return out;
