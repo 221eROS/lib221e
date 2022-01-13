@@ -32,6 +32,7 @@ include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("${PROJECT_BINARY_DIR}")
 
+#set(Boost_DEBUG 1)
 find_package(Boost REQUIRED)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})

@@ -71,7 +71,7 @@ namespace Mitch
 		 * @param name 
 		 * @param user_data 
 		 */
-		static void BLEDiscoverdDevice(void *adapter, const char* addr, const char* name, void *user_data);	
+		static void BLEDiscoveredDevice(void *adapter, const char* addr, const char* name, void *user_data);	
 
 		// Handlers
 

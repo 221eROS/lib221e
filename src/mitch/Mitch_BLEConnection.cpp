@@ -327,7 +327,7 @@ Mitch_BLEConnection::~Mitch_BLEConnection()
     mac_address_ = "";
 }
 
-void Mitch_BLEConnection::BLEDiscoverdDevice(void *adapter, const char *addr, const char *name, void *user_data)
+void Mitch_BLEConnection::BLEDiscoveredDevice(void *adapter, const char *addr, const char *name, void *user_data)
 {
     if (name)
         printf("Discovered %s - '%s'\n", addr, name);
@@ -351,7 +351,7 @@ bool Mitch_BLEConnection::BLEScan()
     }
 
     pthread_mutex_lock(&g_mutex);
-    cmd_ret_ = gattlib_adapter_scan_enable(adapter, BLEDiscoverdDevice, BLE_SCAN_TIMEOUT, NULL /* user_data */);
+    cmd_ret_ = gattlib_adapter_scan_enable(adapter, BLEDiscoveredDevice, BLE_SCAN_TIMEOUT, NULL /* user_data */);
     if (cmd_ret_)
     {
         puts("Failed to scan.");
