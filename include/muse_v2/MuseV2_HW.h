@@ -1,12 +1,12 @@
-#ifndef MUSE_HW_H
-#define MUSE_HW_H
+#ifndef MUSE_V2_HW_H
+#define MUSE_V2_HW_H
 
 #include <stdint.h>
 
-namespace Muse
+namespace MuseV2
 {
 
-	class Muse_HW
+	class MuseV2_HW
 	{
 	public:
 		// Frequency and Clock
@@ -45,7 +45,7 @@ namespace Muse
 			GYROSCOPE_FULL_SCALE_500DPS = 500,
 			GYROSCOPE_FULL_SCALE_1000DPS = 1000,
 			GYROSCOPE_FULL_SCALE_2000DPS = 2000,
-			GYROSCOPE_FULL_SCALE_4000DPS = 400
+			GYROSCOPE_FULL_SCALE_4000DPS = 4000
 		};
 
 		enum AccelerometerFullScale : uint8_t

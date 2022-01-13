@@ -1,5 +1,5 @@
-#ifndef MITCH_BLE_CONNECTION_H
-#define MITCH_BLE_CONNECTION_H
+#ifndef MITCH_V2_BLE_CONNECTION_H
+#define MITCH_V2_BLE_CONNECTION_H
 
 #include <fstream>
 #include <gattlib.h>
@@ -7,22 +7,22 @@
 #include <functional>
 #include <jsoncpp/json/writer.h>
 
-#include <mitch/Mitch_HW.h>
-#include <mitch/Mitch_StreamingData.h>
+#include <mitch_v2/MitchV2_HW.h>
+#include <mitch_v2/MitchV2_StreamingData.h>
 
 #define BLE_SCAN_TIMEOUT 4
 #define ACK_OFFSET 4
 
 typedef void (*ble_discovered_device_t)(const char *addr, const char *name);
 
-namespace Mitch
+namespace MitchV2
 {
 	/**
 	 * @brief Bluetooth Low Energy (BLE) Connection
 	 *
 	 * Connect to a Mitch device via BLE
 	 */
-	class Mitch_BLEConnection
+	class MitchV2_BLEConnection
 	{
 	private:
 
@@ -51,7 +51,7 @@ namespace Mitch
 		static float battery_charge_;
 		static bool acquisition_started_;
 		static bool acquisition_stopped_;
-		static Mitch_HW::SystemState current_state_;
+		static MitchV2_HW::SystemState current_state_;
 		static float current_gyr_resolution_;
 		static float current_axl_resolution_;
 		static float current_mag_resolution_;
@@ -140,9 +140,9 @@ namespace Mitch
 		 * @param data_uuid The data UUID
 		 * @param json_file_path The path of your .json output file containing the streamed data
 		 */
-		Mitch_BLEConnection(const char * mac_address= "", const char * cmd_uuid = "", const char * data_uuid = "", const char * json_file_path = "");
+		MitchV2_BLEConnection(const char * mac_address= "", const char * cmd_uuid = "", const char * data_uuid = "", const char * json_file_path = "");
 		
-		~Mitch_BLEConnection();
+		~MitchV2_BLEConnection();
 
 		// Properties
 
@@ -220,7 +220,7 @@ namespace Mitch
 		 * 
 		 * @return Mitch_HW::SystemState - The state of the device
 		 */
-		Mitch_HW::SystemState getState();
+		MitchV2_HW::SystemState getState();
 
 		// Battery
 

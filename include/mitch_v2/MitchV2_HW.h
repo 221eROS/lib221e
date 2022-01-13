@@ -1,15 +1,15 @@
-#ifndef MITCH_HW_H
-#define MITCH_HW_H
+#ifndef MITCH_V2_HW_H
+#define MITCH_V2_HW_H
 
 #include <serial/SerialConnection.h>
 
-namespace Mitch
+namespace MitchV2
 {
     /**
     * @brief Hardware related communication protocol specifications
     */
 
-    class Mitch_HW
+    class MitchV2_HW
     {
     public:
         static const int COMM_MESSAGE_LEN = 20;	            // Overall message length [Bytes]

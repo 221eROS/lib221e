@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.0.2)
 project(lib221e)
 
 set(LIB221E_MAJOR_VERSION 0)
@@ -84,73 +84,73 @@ install(TARGETS Connection
 ##Mitch
 
 if(UNIX)
-    set(MITCH_INCLUDES	${PROJECT_INCLUDE_DIR}/mitch/Mitch_HW.h
-                        ${PROJECT_INCLUDE_DIR}/mitch/Mitch_Data.h
-                        ${PROJECT_INCLUDE_DIR}/mitch/Mitch_StreamingData.h
-                        ${PROJECT_INCLUDE_DIR}/mitch/Mitch_SerialConnection.h	
-                        ${PROJECT_INCLUDE_DIR}/mitch/Mitch_BLEConnection.h	
+    set(MITCH_V2_INCLUDES	${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_HW.h
+                            ${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_Data.h
+                            ${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_StreamingData.h
+                            ${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_SerialConnection.h	
+                            ${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_BLEConnection.h	
     )
 
-    set(MITCH_SOURCES	${PROJECT_SOURCE_DIR}/mitch/Mitch_SerialConnection.cpp	
-                      ${PROJECT_SOURCE_DIR}/mitch/Mitch_BLEConnection.cpp
-                      ${PROJECT_SOURCE_DIR}/mitch/Mitch_StreamingData.cpp	
+    set(MITCH_V2_SOURCES	${PROJECT_SOURCE_DIR}/mitch_v2/MitchV2_SerialConnection.cpp	
+                            ${PROJECT_SOURCE_DIR}/mitch_v2/MitchV2_BLEConnection.cpp
+                            ${PROJECT_SOURCE_DIR}/mitch_v2/MitchV2_StreamingData.cpp	
    )
 else()
-    set(MITCH_INCLUDES	${PROJECT_INCLUDE_DIR}/mitch/Mitch_HW.h
-                        ${PROJECT_INCLUDE_DIR}/mitch/Mitch_Data.h
-                        ${PROJECT_INCLUDE_DIR}/mitch/Mitch_SerialConnection.h	
+    set(MITCH_V2_INCLUDES	${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_HW.h
+                            ${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_Data.h
+                            ${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_SerialConnection.h	
    )
 
-    set(MITCH_SOURCES	${PROJECT_SOURCE_DIR}/mitch/Mitch_SerialConnection.cpp	
+    set(MITCH_V2_SOURCES	${PROJECT_SOURCE_DIR}/mitch_v2/MitchV2_SerialConnection.cpp	
    )
 
-    set(MUSE_INCLUDES	${PROJECT_INCLUDE_DIR}/muse/Muse_HW.h
-                        ${PROJECT_INCLUDE_DIR}/muse/Muse_SerialConnection.h	
+    set(MUSE_V2_INCLUDES	${PROJECT_INCLUDE_DIR}/muse_v2/MuseV2_HW.h
+                            ${PROJECT_INCLUDE_DIR}/muse_v2/MuseV2_SerialConnection.h	
    )
 
-    set(MUSE_SOURCES	${PROJECT_SOURCE_DIR}/muse/Muse_SerialConnection.cpp	
+    set(MUSE_V2_SOURCES	    ${PROJECT_SOURCE_DIR}/muse_v2/MuseV2_SerialConnection.cpp	
    )
 endif()
 
-add_library(Mitch STATIC ${MITCH_INCLUDES} ${MITCH_SOURCES} ${Boost_LIBRARIES})
-target_link_libraries(Mitch Connection)
+add_library(MitchV2 STATIC ${MITCH_V2_INCLUDES} ${MITCH_V2_SOURCES} ${Boost_LIBRARIES})
+target_link_libraries(MitchV2 Connection)
 
-install(TARGETS Mitch
+install(TARGETS MitchV2
   # IMPORTANT: Add the Core library to the "export-set"
   EXPORT lib221eTargets
   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/mitch"
+  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/mitch_v2"
     COMPONENT dev)
 
-add_library(Muse STATIC ${MUSE_INCLUDES} ${MUSE_SOURCES} ${Boost_LIBRARIES})
-target_link_libraries(Muse Connection)
+add_library(MuseV2 STATIC ${MUSE_V2_INCLUDES} ${MUSE_V2_SOURCES} ${Boost_LIBRARIES})
+target_link_libraries(MuseV2 Connection)
 
-install(TARGETS Muse
+install(TARGETS MuseV2
   # IMPORTANT: Add the Core library to the "export-set"
   EXPORT lib221eTargets
   RUNTIME DESTINATION "${INSTALL_BIN_DIR}" COMPONENT bin
   LIBRARY DESTINATION "${INSTALL_LIB_DIR}" COMPONENT shlib
-  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/muse"
+  PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/muse_v2"
     COMPONENT dev)
 
 ## test
-add_executable(MitchSerialTest "test/mitch_serial_test.cpp")
-target_link_libraries(MitchSerialTest Mitch Connection)
+add_executable(MitchV2SerialTest "test/mitch_v2_serial_test.cpp")
+target_link_libraries(MitchV2SerialTest MitchV2 Connection)
 
-add_executable(MuseSerialTest "test/muse_serial_test.cpp")
-target_link_libraries(MuseSerialTest Muse Connection)
+add_executable(MuseV2SerialTest "test/muse_v2_serial_test.cpp")
+target_link_libraries(MuseV2SerialTest MuseV2 Connection)
 
 if(UNIX)
-    add_executable(MitchBLETest "test/mitch_ble_test.cpp")
-    target_link_libraries(MitchBLETest Mitch ${GATTLIB} pthread jsoncpp)
+    add_executable(MitchV2BLETest "test/mitch_v2_ble_test.cpp")
+    target_link_libraries(MitchV2BLETest MitchV2 ${GATTLIB} pthread jsoncpp)
 
     # Add all targets to the build-tree export set
-    export(TARGETS Mitch Muse Connection MitchSerialTest MitchBLETest MuseSerialTest
+    export(TARGETS MitchV2 MuseV2 Connection MitchV2SerialTest MitchV2BLETest MuseV2SerialTest
     FILE "${PROJECT_BINARY_DIR}/lib221eTargets.cmake")
 else()
     # Add all targets to the build-tree export set
-    export(TARGETS Mitch Muse Connection MitchSerialTest MuseSerialTest
+    export(TARGETS MitchV2 MuseV2 Connection MitchV2SerialTest MuseV2SerialTest
     FILE "${PROJECT_BINARY_DIR}/lib221eTargets.cmake")
 endif()
 

@@ -1,7 +1,7 @@
 #include <thread>
-#include <muse/Muse_SerialConnection.h>
+#include <muse_v2/MuseV2_SerialConnection.h>
 
-using namespace Muse;
+using namespace MuseV2;
 
 int main()
 {
@@ -10,7 +10,7 @@ int main()
 	try {
 
 		// Serial Connection object - input: Serial port
-		Muse_SerialConnection *my_serial = new Muse_SerialConnection("COM5");
+		MuseV2_SerialConnection *my_serial = new MuseV2_SerialConnection("COM5");
 		//Muse_SerialConnection my_serial("COM5");
 
 		// Check if the device is connected
@@ -28,12 +28,12 @@ int main()
 			// Configuration
 
 			// Set new values
-			my_serial->setGyroscopeFullScale(Muse_HW::GYROSCOPE_FULL_SCALE_2000DPS);
-			my_serial->setAccelerometerFullScale(Muse_HW::ACCELEROMENTER_FULL_SCALE_4g);
-			my_serial->setAccelerometerHDRFullScale(Muse_HW::ACCELEROMENTER_HDR_FULL_SCALE_200g);
-			my_serial->setMagnetometerFullScale(Muse_HW::MAGNETOMETER_FULL_SCALE_8G);
-			my_serial->setLogMode(Muse_HW::LOG_RAW);
-			my_serial->setLogFrequency(Muse_HW::STREAM_FREQ_50HZ);
+			my_serial->setGyroscopeFullScale(MuseV2_HW::GYROSCOPE_FULL_SCALE_2000DPS);
+			my_serial->setAccelerometerFullScale(MuseV2_HW::ACCELEROMENTER_FULL_SCALE_4g);
+			my_serial->setAccelerometerHDRFullScale(MuseV2_HW::ACCELEROMENTER_HDR_FULL_SCALE_200g);
+			my_serial->setMagnetometerFullScale(MuseV2_HW::MAGNETOMETER_FULL_SCALE_8G);
+			my_serial->setLogMode(MuseV2_HW::LOG_RAW);
+			my_serial->setLogFrequency(MuseV2_HW::STREAM_FREQ_50HZ);
 
 			// Show
 
@@ -62,12 +62,12 @@ int main()
 			printf("Log Frequency: %u [Hz]\n", log_freq);
 
 			// Set again the old values
-			my_serial->setGyroscopeFullScale(Muse_HW::GYROSCOPE_FULL_SCALE_4000DPS);
-			my_serial->setAccelerometerFullScale(Muse_HW::ACCELEROMENTER_FULL_SCALE_16g);
-			my_serial->setAccelerometerHDRFullScale(Muse_HW::ACCELEROMENTER_HDR_FULL_SCALE_100g);
-			my_serial->setMagnetometerFullScale(Muse_HW::MAGNETOMETER_FULL_SCALE_4G);
-			my_serial->setLogMode(Muse_HW::LOG_HIGH_RESOLUTION);
-			my_serial->setLogFrequency(Muse_HW::STREAM_FREQ_200HZ);
+			my_serial->setGyroscopeFullScale(MuseV2_HW::GYROSCOPE_FULL_SCALE_4000DPS);
+			my_serial->setAccelerometerFullScale(MuseV2_HW::ACCELEROMENTER_FULL_SCALE_16g);
+			my_serial->setAccelerometerHDRFullScale(MuseV2_HW::ACCELEROMENTER_HDR_FULL_SCALE_100g);
+			my_serial->setMagnetometerFullScale(MuseV2_HW::MAGNETOMETER_FULL_SCALE_4G);
+			my_serial->setLogMode(MuseV2_HW::LOG_HIGH_RESOLUTION);
+			my_serial->setLogFrequency(MuseV2_HW::STREAM_FREQ_200HZ);
 
 			// Show
 
@@ -146,30 +146,30 @@ int main()
 			while (((intmax_t)(time(0) - time_begin) < 1)) {
 
 				// Get current acceleration
-				acc = my_serial->getAcceleration(Muse_HW::StreamFrequency::STREAM_FREQ_50HZ);
+				acc = my_serial->getAcceleration(MuseV2_HW::StreamFrequency::STREAM_FREQ_50HZ);
 				printf("Acceleration: (x: %.2f, y: %.2f, z: %.2f) \n", acc.x, acc.y, acc.z);
 
 				// Get current angular velocity
-				ang_vel = my_serial->getAngularVelocity(Muse_HW::StreamFrequency::STREAM_FREQ_50HZ);
+				ang_vel = my_serial->getAngularVelocity(MuseV2_HW::StreamFrequency::STREAM_FREQ_50HZ);
 				printf("Angular Velocity: (x: %.2f, y: %.2f, z: %.2f) \n", ang_vel.x, ang_vel.y, ang_vel.z);
 
 				// Get current imu 
-				imu = my_serial->getIMU(Muse_HW::StreamFrequency::STREAM_FREQ_50HZ);
+				imu = my_serial->getIMU(MuseV2_HW::StreamFrequency::STREAM_FREQ_50HZ);
 				printf("Imu:  (qw: %.2f, qx: %.2f, qy: %.2f, qz: %.2f, omega_x: %.2f, omega_y: %.2f, omega_z: %.2f, ax: %.2f, ay: %.2f, az: %.2f)\n", 
 					imu.quaternion.w, imu.quaternion.x, imu.quaternion.y, imu.quaternion.z,
 					imu.gyroscope.x, imu.gyroscope.y, imu.gyroscope.z,
 					imu.linear_acceleration.x, imu.linear_acceleration.y, imu.linear_acceleration.z);
 
 				// Get current magnetic field 
-				mag = my_serial->getMag(Muse_HW::StreamFrequency::STREAM_FREQ_50HZ);
+				mag = my_serial->getMag(MuseV2_HW::StreamFrequency::STREAM_FREQ_50HZ);
 				printf("Magnetic Field: (x: %.2f, y: %.2f, z: %.2f) \n", mag.x, mag.y, mag.z);
 
 				// Get current quaternion
-				quat = my_serial->getQuaternion(Muse_HW::StreamFrequency::STREAM_FREQ_50HZ);
+				quat = my_serial->getQuaternion(MuseV2_HW::StreamFrequency::STREAM_FREQ_50HZ);
 				printf("Quaternion: (w: %.2f, x: %.2f, y: %.2f, z: %.2f) \n", quat.w, quat.x, quat.y, quat.z);
 
 				// Get current roll-pitch-yaw
-				rpy = my_serial->getRPY(Muse_HW::StreamFrequency::STREAM_FREQ_50HZ);
+				rpy = my_serial->getRPY(MuseV2_HW::StreamFrequency::STREAM_FREQ_50HZ);
 				printf("Euler Angles:(roll: %.2f, pitch: %.2f, yaw: %.2f) \n", rpy.roll, rpy.pitch, rpy.yaw);
 			}
 

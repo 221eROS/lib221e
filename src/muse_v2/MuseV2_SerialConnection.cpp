@@ -1,8 +1,8 @@
-#include <muse/Muse_SerialConnection.h>
+#include <muse_v2/MuseV2_SerialConnection.h>
 
-using namespace Muse;
+using namespace MuseV2;
 
-Muse_SerialConnection::Muse_SerialConnection(const string& port,
+MuseV2_SerialConnection::MuseV2_SerialConnection(const string& port,
 	uint32_t baudrate,
 	Timeout timeout,
 	bytesize_t bytesize,
@@ -22,28 +22,28 @@ Muse_SerialConnection::Muse_SerialConnection(const string& port,
 	}
 }
 
-Muse_SerialConnection::~Muse_SerialConnection()
+MuseV2_SerialConnection::~MuseV2_SerialConnection()
 {
 	connection_status_ = false;
 	transmission_status_ = false;
 	serial_port_ = "";
 }
 
-bool Muse_SerialConnection::checkConnectionStatus()
+bool MuseV2_SerialConnection::checkConnectionStatus()
 {
 	return connection_status_;
 }
 
-bool Muse_SerialConnection::checkTransmissionStatus()
+bool MuseV2_SerialConnection::checkTransmissionStatus()
 {
 	return transmission_status_;
 }
 
-void Muse_SerialConnection::stopTransmission()
+void MuseV2_SerialConnection::stopTransmission()
 {
 	if (checkConnectionStatus() && checkTransmissionStatus()) {
 		serial_connection_.Flush();
-		serial_connection_.Write(Muse_HW::StopTransmission);
+		serial_connection_.Write(MuseV2_HW::StopTransmission);
 		Sleep(1000);
 		while (serial_connection_.Available() > 0)
 			serial_connection_.Read();
@@ -52,15 +52,15 @@ void Muse_SerialConnection::stopTransmission()
 
 }
 
-void Muse_SerialConnection::shutdown()
+void MuseV2_SerialConnection::shutdown()
 {
 	if (checkConnectionStatus()) {
-		serial_connection_.Write(Muse_HW::Shutdown);
+		serial_connection_.Write(MuseV2_HW::Shutdown);
 		disconnect();
 	}
 }
 
-void Muse_SerialConnection::disconnect()
+void MuseV2_SerialConnection::disconnect()
 {
 	if (checkConnectionStatus()) {
 		serial_connection_.Flush();
@@ -70,7 +70,7 @@ void Muse_SerialConnection::disconnect()
 	}
 }
 
-float Muse_SerialConnection::getBatteryCharge(){
+float MuseV2_SerialConnection::getBatteryCharge(){
 
 	float charge = -1;
 
@@ -79,13 +79,13 @@ float Muse_SerialConnection::getBatteryCharge(){
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetBatteryCharge);
+	serial_connection_.Write(MuseV2_HW::GetBatteryCharge);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
-		uint8_t battery_charge_buffer[Muse_HW::BATTERY_BUFFER_SIZE];
+		uint8_t battery_charge_buffer[MuseV2_HW::BATTERY_BUFFER_SIZE];
 		int offset = 2;
 		serial_connection_.Read(battery_charge_buffer, sizeof(battery_charge_buffer));
 
@@ -98,7 +98,7 @@ float Muse_SerialConnection::getBatteryCharge(){
 
 }
 
-float Muse_SerialConnection::getBatteryVoltage() {
+float MuseV2_SerialConnection::getBatteryVoltage() {
 
 	float voltage = -1;
 
@@ -107,13 +107,13 @@ float Muse_SerialConnection::getBatteryVoltage() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetBatteryVoltage);
+	serial_connection_.Write(MuseV2_HW::GetBatteryVoltage);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
-		uint8_t battery_voltage_buffer[Muse_HW::BATTERY_BUFFER_SIZE];
+		uint8_t battery_voltage_buffer[MuseV2_HW::BATTERY_BUFFER_SIZE];
 		int offset = 2;
 		serial_connection_.Read(battery_voltage_buffer, sizeof(battery_voltage_buffer));
 
@@ -127,7 +127,7 @@ float Muse_SerialConnection::getBatteryVoltage() {
 	return voltage;
 }
 
-uint16_t Muse_SerialConnection::getGyroscopeFullScale() {
+uint16_t MuseV2_SerialConnection::getGyroscopeFullScale() {
 
 	uint16_t gyroscope = 0;
 
@@ -136,14 +136,14 @@ uint16_t Muse_SerialConnection::getGyroscopeFullScale() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetConfigurationParams);
+	serial_connection_.Write(MuseV2_HW::GetConfigurationParams);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t configuration_buffer[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+		uint8_t configuration_buffer[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 		serial_connection_.Read(configuration_buffer, sizeof(configuration_buffer));
 
 		if (configuration_buffer[0] == 'P' && configuration_buffer[1] == 'P') {
@@ -151,16 +151,16 @@ uint16_t Muse_SerialConnection::getGyroscopeFullScale() {
 			switch (configuration_buffer[2])
 			{
 			case 0x00:	// 0
-				gyroscope = Muse_HW::GYROSCOPE_FULL_SCALE_500DPS;
+				gyroscope = MuseV2_HW::GYROSCOPE_FULL_SCALE_500DPS;
 				break;
 			case 0x08:	// 8
-				gyroscope = Muse_HW::GYROSCOPE_FULL_SCALE_1000DPS;
+				gyroscope = MuseV2_HW::GYROSCOPE_FULL_SCALE_1000DPS;
 				break;
 			case 0x10:	// 16
-				gyroscope = Muse_HW::GYROSCOPE_FULL_SCALE_2000DPS;
+				gyroscope = MuseV2_HW::GYROSCOPE_FULL_SCALE_2000DPS;
 				break;
 			case 0x18:	// 24
-				gyroscope = Muse_HW::GYROSCOPE_FULL_SCALE_4000DPS;
+				gyroscope = MuseV2_HW::GYROSCOPE_FULL_SCALE_4000DPS;
 				break;
 			}
 		}
@@ -169,7 +169,7 @@ uint16_t Muse_SerialConnection::getGyroscopeFullScale() {
 	return gyroscope;
 }
 
-uint8_t Muse_SerialConnection::getAccFullScale() {
+uint8_t MuseV2_SerialConnection::getAccFullScale() {
 
 	uint8_t acc = 0;
 
@@ -178,14 +178,14 @@ uint8_t Muse_SerialConnection::getAccFullScale() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetConfigurationParams);
+	serial_connection_.Write(MuseV2_HW::GetConfigurationParams);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t configuration_buffer[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+		uint8_t configuration_buffer[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 		serial_connection_.Read(configuration_buffer, sizeof(configuration_buffer));
 
 		if (configuration_buffer[0] == 'P' && configuration_buffer[1] == 'P') {
@@ -193,19 +193,19 @@ uint8_t Muse_SerialConnection::getAccFullScale() {
 			switch (configuration_buffer[3])
 			{
 			case 0x00:	// 0
-				acc = Muse_HW::ACCELEROMENTER_FULL_SCALE_2g;
+				acc = MuseV2_HW::ACCELEROMENTER_FULL_SCALE_2g;
 				break;
 			case 0x08:	// 8
-				acc = Muse_HW::ACCELEROMENTER_FULL_SCALE_4g;
+				acc = MuseV2_HW::ACCELEROMENTER_FULL_SCALE_4g;
 				break;
 			case 0x10:	// 16
-				acc = Muse_HW::ACCELEROMENTER_FULL_SCALE_6g;
+				acc = MuseV2_HW::ACCELEROMENTER_FULL_SCALE_6g;
 				break;
 			case 0x18:	// 24
-				acc = Muse_HW::ACCELEROMENTER_FULL_SCALE_8g;
+				acc = MuseV2_HW::ACCELEROMENTER_FULL_SCALE_8g;
 				break;
 			case 0x20:	// 32
-				acc = Muse_HW::ACCELEROMENTER_FULL_SCALE_16g;
+				acc = MuseV2_HW::ACCELEROMENTER_FULL_SCALE_16g;
 				break;
 			}
 		}
@@ -214,7 +214,7 @@ uint8_t Muse_SerialConnection::getAccFullScale() {
 	return acc;
 }
 
-uint16_t Muse_SerialConnection::getAccHdrFullScale() {
+uint16_t MuseV2_SerialConnection::getAccHdrFullScale() {
 
 	uint16_t acc_hdr = 0;
 
@@ -223,14 +223,14 @@ uint16_t Muse_SerialConnection::getAccHdrFullScale() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetConfigurationParams);
+	serial_connection_.Write(MuseV2_HW::GetConfigurationParams);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t configuration_buffer[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+		uint8_t configuration_buffer[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 		serial_connection_.Read(configuration_buffer, sizeof(configuration_buffer));
 
 		if (configuration_buffer[0] == 'P' && configuration_buffer[1] == 'P') {
@@ -238,13 +238,13 @@ uint16_t Muse_SerialConnection::getAccHdrFullScale() {
 			switch (configuration_buffer[5])
 			{
 			case 0x00:	// 0
-				acc_hdr = Muse_HW::ACCELEROMENTER_HDR_FULL_SCALE_100g;
+				acc_hdr = MuseV2_HW::ACCELEROMENTER_HDR_FULL_SCALE_100g;
 				break;
 			case 0x10:	// 16
-				acc_hdr = Muse_HW::ACCELEROMENTER_HDR_FULL_SCALE_200g;
+				acc_hdr = MuseV2_HW::ACCELEROMENTER_HDR_FULL_SCALE_200g;
 				break;
 			case 0x18:	// 24
-				acc_hdr = Muse_HW::ACCELEROMENTER_HDR_FULL_SCALE_400g;
+				acc_hdr = MuseV2_HW::ACCELEROMENTER_HDR_FULL_SCALE_400g;
 				break;
 			}
 		}
@@ -253,7 +253,7 @@ uint16_t Muse_SerialConnection::getAccHdrFullScale() {
 	return acc_hdr;
 }
 
-uint8_t Muse_SerialConnection::getMagnetometerFullScale() {
+uint8_t MuseV2_SerialConnection::getMagnetometerFullScale() {
 
 	uint8_t mag = 0;
 
@@ -262,14 +262,14 @@ uint8_t Muse_SerialConnection::getMagnetometerFullScale() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetConfigurationParams);
+	serial_connection_.Write(MuseV2_HW::GetConfigurationParams);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t configuration_buffer[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+		uint8_t configuration_buffer[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 		serial_connection_.Read(configuration_buffer, sizeof(configuration_buffer));
 
 		if (configuration_buffer[0] == 'P' && configuration_buffer[1] == 'P') {
@@ -277,16 +277,16 @@ uint8_t Muse_SerialConnection::getMagnetometerFullScale() {
 			switch (configuration_buffer[4])
 			{
 			case 0x00:	// 0
-				mag = Muse_HW::MAGNETOMETER_FULL_SCALE_2G;
+				mag = MuseV2_HW::MAGNETOMETER_FULL_SCALE_2G;
 				break;
 			case 0x20:	// 32
-				mag = Muse_HW::MAGNETOMETER_FULL_SCALE_4G;
+				mag = MuseV2_HW::MAGNETOMETER_FULL_SCALE_4G;
 				break;
 			case 0x40:	// 64
-				mag = Muse_HW::MAGNETOMETER_FULL_SCALE_8G;
+				mag = MuseV2_HW::MAGNETOMETER_FULL_SCALE_8G;
 				break;
 			case 0x60:	// 96
-				mag = Muse_HW::MAGNETOMETER_FULL_SCALE_12G;
+				mag = MuseV2_HW::MAGNETOMETER_FULL_SCALE_12G;
 				break;
 			}
 		}
@@ -295,7 +295,7 @@ uint8_t Muse_SerialConnection::getMagnetometerFullScale() {
 	return mag;
 }
 
-uint8_t Muse_SerialConnection::getLogMode() {
+uint8_t MuseV2_SerialConnection::getLogMode() {
 
 	uint8_t log_mode = UINT8_MAX;
 
@@ -304,14 +304,14 @@ uint8_t Muse_SerialConnection::getLogMode() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetConfigurationParams);
+	serial_connection_.Write(MuseV2_HW::GetConfigurationParams);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t configuration_buffer[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+		uint8_t configuration_buffer[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 		serial_connection_.Read(configuration_buffer, sizeof(configuration_buffer));
 
 		if (configuration_buffer[0] == 'P' && configuration_buffer[1] == 'P')
@@ -322,7 +322,7 @@ uint8_t Muse_SerialConnection::getLogMode() {
 	return log_mode;
 }
 
-uint8_t Muse_SerialConnection::getLogFrequency() {
+uint8_t MuseV2_SerialConnection::getLogFrequency() {
 
 	uint8_t log_frequency = UINT8_MAX;
 
@@ -331,14 +331,14 @@ uint8_t Muse_SerialConnection::getLogFrequency() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetConfigurationParams);
+	serial_connection_.Write(MuseV2_HW::GetConfigurationParams);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t configuration_buffer[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+		uint8_t configuration_buffer[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 		serial_connection_.Read(configuration_buffer, sizeof(configuration_buffer));
 
 		if (configuration_buffer[0] == 'P' && configuration_buffer[1] == 'P') 
@@ -349,10 +349,10 @@ uint8_t Muse_SerialConnection::getLogFrequency() {
 	return log_frequency;
 }
 
-bool Muse_SerialConnection::setGyroscopeFullScale(const uint16_t value)
+bool MuseV2_SerialConnection::setGyroscopeFullScale(const uint16_t value)
 {
 	bool out = true;
-	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+	char cmd[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 
 	if (!checkConnectionStatus()) {
 		out = false;
@@ -361,17 +361,17 @@ bool Muse_SerialConnection::setGyroscopeFullScale(const uint16_t value)
 
 	switch (value)
 	{
-	case Muse_HW::GYROSCOPE_FULL_SCALE_500DPS:
-		sprintf(cmd, Muse_HW::SetGyroscopeFullScale, 0x00);	// 0
+	case MuseV2_HW::GYROSCOPE_FULL_SCALE_500DPS:
+		sprintf(cmd, MuseV2_HW::SetGyroscopeFullScale, 0x00);	// 0
 		break;
-	case Muse_HW::GYROSCOPE_FULL_SCALE_1000DPS:
-		sprintf(cmd, Muse_HW::SetGyroscopeFullScale, 0x08);	// 8
+	case MuseV2_HW::GYROSCOPE_FULL_SCALE_1000DPS:
+		sprintf(cmd, MuseV2_HW::SetGyroscopeFullScale, 0x08);	// 8
 		break;
-	case Muse_HW::GYROSCOPE_FULL_SCALE_2000DPS:
-		sprintf(cmd, Muse_HW::SetGyroscopeFullScale, 0x10);	// 16
+	case MuseV2_HW::GYROSCOPE_FULL_SCALE_2000DPS:
+		sprintf(cmd, MuseV2_HW::SetGyroscopeFullScale, 0x10);	// 16
 		break;
-	case Muse_HW::GYROSCOPE_FULL_SCALE_4000DPS:
-		sprintf(cmd, Muse_HW::SetGyroscopeFullScale, 0x18);	// 24
+	case MuseV2_HW::GYROSCOPE_FULL_SCALE_4000DPS:
+		sprintf(cmd, MuseV2_HW::SetGyroscopeFullScale, 0x18);	// 24
 		break;
 	default:
 		printf("Gyroscope full scale value not valid.\n");
@@ -389,10 +389,10 @@ bool Muse_SerialConnection::setGyroscopeFullScale(const uint16_t value)
 
 }
 
-bool Muse_SerialConnection::setAccelerometerFullScale(const uint8_t value)
+bool MuseV2_SerialConnection::setAccelerometerFullScale(const uint8_t value)
 {
 	bool out = true;
-	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+	char cmd[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 
 	if (!checkConnectionStatus()) {
 		out = false;
@@ -401,20 +401,20 @@ bool Muse_SerialConnection::setAccelerometerFullScale(const uint8_t value)
 
 	switch (value)
 	{
-	case Muse_HW::ACCELEROMENTER_FULL_SCALE_2g:
-		sprintf(cmd, Muse_HW::SetAccelerometerFullScale, 0x00);	// 0
+	case MuseV2_HW::ACCELEROMENTER_FULL_SCALE_2g:
+		sprintf(cmd, MuseV2_HW::SetAccelerometerFullScale, 0x00);	// 0
 		break;
-	case Muse_HW::ACCELEROMENTER_FULL_SCALE_4g:
-		sprintf(cmd, Muse_HW::SetAccelerometerFullScale, 0x08);	// 8
+	case MuseV2_HW::ACCELEROMENTER_FULL_SCALE_4g:
+		sprintf(cmd, MuseV2_HW::SetAccelerometerFullScale, 0x08);	// 8
 		break;
-	case Muse_HW::ACCELEROMENTER_FULL_SCALE_6g:
-		sprintf(cmd, Muse_HW::SetAccelerometerFullScale, 0x10);	// 16
+	case MuseV2_HW::ACCELEROMENTER_FULL_SCALE_6g:
+		sprintf(cmd, MuseV2_HW::SetAccelerometerFullScale, 0x10);	// 16
 		break;
-	case Muse_HW::ACCELEROMENTER_FULL_SCALE_8g:
-		sprintf(cmd, Muse_HW::SetAccelerometerFullScale, 0x18);	// 24
+	case MuseV2_HW::ACCELEROMENTER_FULL_SCALE_8g:
+		sprintf(cmd, MuseV2_HW::SetAccelerometerFullScale, 0x18);	// 24
 		break;
-	case Muse_HW::ACCELEROMENTER_FULL_SCALE_16g:
-		sprintf(cmd, Muse_HW::SetAccelerometerFullScale, 0x20);	// 32
+	case MuseV2_HW::ACCELEROMENTER_FULL_SCALE_16g:
+		sprintf(cmd, MuseV2_HW::SetAccelerometerFullScale, 0x20);	// 32
 		break;
 	default:
 		printf("Accelerometer full scale value not valid.\n");
@@ -431,10 +431,10 @@ bool Muse_SerialConnection::setAccelerometerFullScale(const uint8_t value)
 	return out;
 }
 
-bool Muse_SerialConnection::setAccelerometerHDRFullScale(const uint16_t value)
+bool MuseV2_SerialConnection::setAccelerometerHDRFullScale(const uint16_t value)
 {
 	bool out = true;
-	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+	char cmd[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 
 	if (!checkConnectionStatus()) {
 		out = false;
@@ -443,14 +443,14 @@ bool Muse_SerialConnection::setAccelerometerHDRFullScale(const uint16_t value)
 
 	switch (value)
 	{
-	case Muse_HW::ACCELEROMENTER_HDR_FULL_SCALE_100g:
-		sprintf(cmd, Muse_HW::SetAccelerometerHDRFullScale, 0x00);	// 0
+	case MuseV2_HW::ACCELEROMENTER_HDR_FULL_SCALE_100g:
+		sprintf(cmd, MuseV2_HW::SetAccelerometerHDRFullScale, 0x00);	// 0
 		break;
-	case Muse_HW::ACCELEROMENTER_HDR_FULL_SCALE_200g:
-		sprintf(cmd, Muse_HW::SetAccelerometerHDRFullScale, 0x10);	// 16
+	case MuseV2_HW::ACCELEROMENTER_HDR_FULL_SCALE_200g:
+		sprintf(cmd, MuseV2_HW::SetAccelerometerHDRFullScale, 0x10);	// 16
 		break;
-	case Muse_HW::ACCELEROMENTER_HDR_FULL_SCALE_400g:
-		sprintf(cmd, Muse_HW::SetAccelerometerHDRFullScale, 0x18);	// 24
+	case MuseV2_HW::ACCELEROMENTER_HDR_FULL_SCALE_400g:
+		sprintf(cmd, MuseV2_HW::SetAccelerometerHDRFullScale, 0x18);	// 24
 		break;
 	default:
 		printf("Accelerometer HDR full scale value not valid.\n");
@@ -467,10 +467,10 @@ bool Muse_SerialConnection::setAccelerometerHDRFullScale(const uint16_t value)
 	return out;
 }
 
-bool Muse_SerialConnection::setMagnetometerFullScale(const uint8_t value)
+bool MuseV2_SerialConnection::setMagnetometerFullScale(const uint8_t value)
 {
 	bool out = true;
-	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+	char cmd[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 
 	if (!checkConnectionStatus()) {
 		out = false;
@@ -479,17 +479,17 @@ bool Muse_SerialConnection::setMagnetometerFullScale(const uint8_t value)
 
 	switch (value)
 	{
-	case Muse_HW::MAGNETOMETER_FULL_SCALE_2G:
-		sprintf(cmd, Muse_HW::SetMagnetometerFullScale, 0x00);	// 0
+	case MuseV2_HW::MAGNETOMETER_FULL_SCALE_2G:
+		sprintf(cmd, MuseV2_HW::SetMagnetometerFullScale, 0x00);	// 0
 		break;
-	case Muse_HW::MAGNETOMETER_FULL_SCALE_4G:
-		sprintf(cmd, Muse_HW::SetMagnetometerFullScale, 0x20);	// 32
+	case MuseV2_HW::MAGNETOMETER_FULL_SCALE_4G:
+		sprintf(cmd, MuseV2_HW::SetMagnetometerFullScale, 0x20);	// 32
 		break;
-	case Muse_HW::MAGNETOMETER_FULL_SCALE_8G:
-		sprintf(cmd, Muse_HW::SetMagnetometerFullScale, 0x40);	// 64
+	case MuseV2_HW::MAGNETOMETER_FULL_SCALE_8G:
+		sprintf(cmd, MuseV2_HW::SetMagnetometerFullScale, 0x40);	// 64
 		break;
-	case Muse_HW::MAGNETOMETER_FULL_SCALE_12G:
-		sprintf(cmd, Muse_HW::SetMagnetometerFullScale, 0x60);	// 96
+	case MuseV2_HW::MAGNETOMETER_FULL_SCALE_12G:
+		sprintf(cmd, MuseV2_HW::SetMagnetometerFullScale, 0x60);	// 96
 		break;
 	default:
 		printf("Magnetometer full scale value not valid.\n");
@@ -504,19 +504,19 @@ bool Muse_SerialConnection::setMagnetometerFullScale(const uint8_t value)
 	return out;
 }
 
-bool Muse_SerialConnection::setLogMode(const uint8_t mode)
+bool MuseV2_SerialConnection::setLogMode(const uint8_t mode)
 {
 	bool out = true;
-	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+	char cmd[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 
 	if (!checkConnectionStatus()) {
 		out = false;
 		return out;
 	}
 
-	if (mode == Muse_HW::LOG_NONE || mode == Muse_HW::LOG_QUATERNION || mode == Muse_HW::LOG_HDR || 
-		mode == Muse_HW::LOG_RAW || mode == Muse_HW::LOG_RAW_AND_QUATERNION || mode == Muse_HW::LOG_HIGH_RESOLUTION)
-		sprintf(cmd, Muse_HW::SetLogMode, mode);
+	if (mode == MuseV2_HW::LOG_NONE || mode == MuseV2_HW::LOG_QUATERNION || mode == MuseV2_HW::LOG_HDR ||
+		mode == MuseV2_HW::LOG_RAW || mode == MuseV2_HW::LOG_RAW_AND_QUATERNION || mode == MuseV2_HW::LOG_HIGH_RESOLUTION)
+		sprintf(cmd, MuseV2_HW::SetLogMode, mode);
 	else {
 		printf("Invalid Log Mode.\n");
 		out = false;
@@ -530,18 +530,18 @@ bool Muse_SerialConnection::setLogMode(const uint8_t mode)
 	return out;
 }
 
-bool Muse_SerialConnection::setLogFrequency(const uint8_t frequency)
+bool MuseV2_SerialConnection::setLogFrequency(const uint8_t frequency)
 {
 	bool out = true;
-	char cmd[Muse_HW::CONFIGURATION_BUFFER_SIZE];
+	char cmd[MuseV2_HW::CONFIGURATION_BUFFER_SIZE];
 
 	if (!checkConnectionStatus()) {
 		out = false;
 		return out;
 	}
 
-	if (frequency <= Muse_HW::MAX_LOG_FREQUENCY)
-		sprintf(cmd, Muse_HW::SetLogFrequency, frequency);
+	if (frequency <= MuseV2_HW::MAX_LOG_FREQUENCY)
+		sprintf(cmd, MuseV2_HW::SetLogFrequency, frequency);
 	else {
 		printf("Invalid Log Frequency.\n");
 		out = false;
@@ -555,7 +555,7 @@ bool Muse_SerialConnection::setLogFrequency(const uint8_t frequency)
 	return out;
 }
 
-vector<float> Muse_SerialConnection::getGyroscopeOffset() {
+vector<float> MuseV2_SerialConnection::getGyroscopeOffset() {
 
 	vector<float> params;
 
@@ -564,14 +564,14 @@ vector<float> Muse_SerialConnection::getGyroscopeOffset() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetGyroscopeOffset);
+	serial_connection_.Write(MuseV2_HW::GetGyroscopeOffset);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t offset_buffer[Muse_HW::GYROSCOPE_OFFSET_BUFFER_SIZE];
+		uint8_t offset_buffer[MuseV2_HW::GYROSCOPE_OFFSET_BUFFER_SIZE];
 		serial_connection_.Read(offset_buffer, sizeof(offset_buffer));
 
 		int c_element_size = 2;
@@ -596,7 +596,7 @@ vector<float> Muse_SerialConnection::getGyroscopeOffset() {
 	return params;
 }
 
-vector<float> Muse_SerialConnection::getAccelerometerCalibParams() {
+vector<float> MuseV2_SerialConnection::getAccelerometerCalibParams() {
 
 	vector<float> params;
 
@@ -605,14 +605,14 @@ vector<float> Muse_SerialConnection::getAccelerometerCalibParams() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetAccelerometerCalibParams);
+	serial_connection_.Write(MuseV2_HW::GetAccelerometerCalibParams);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t calib_buffer[Muse_HW::CALIBRATION_BUFFER_SIZE];
+		uint8_t calib_buffer[MuseV2_HW::CALIBRATION_BUFFER_SIZE];
 		serial_connection_.Read(calib_buffer, sizeof(calib_buffer));
 
 		int c_element_size = 2;
@@ -620,7 +620,7 @@ vector<float> Muse_SerialConnection::getAccelerometerCalibParams() {
 
 		if (calib_buffer[0] == 'C' && calib_buffer[1] == 'C')
 		{
-			params.resize(Muse_HW::CALIB_PARAMS_MESSAGE_SIZE);
+			params.resize(MuseV2_HW::CALIB_PARAMS_MESSAGE_SIZE);
 
 			for (int i = 0; i < params.size(); ++i) {
 				uint8_t params_array[4] = {calib_buffer[c_element_size + 3 + offset * i], 
@@ -636,7 +636,7 @@ vector<float> Muse_SerialConnection::getAccelerometerCalibParams() {
 	return params;
 }
 
-vector<float> Muse_SerialConnection::getMagnetometerCalibParams() {
+vector<float> MuseV2_SerialConnection::getMagnetometerCalibParams() {
 
 	vector<float> params;
 
@@ -645,14 +645,14 @@ vector<float> Muse_SerialConnection::getMagnetometerCalibParams() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetMagnetometerCalibParams);
+	serial_connection_.Write(MuseV2_HW::GetMagnetometerCalibParams);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t calib_buffer[Muse_HW::CALIBRATION_BUFFER_SIZE];
+		uint8_t calib_buffer[MuseV2_HW::CALIBRATION_BUFFER_SIZE];
 		serial_connection_.Read(calib_buffer, sizeof(calib_buffer));
 
 		int c_element_size = 2;
@@ -660,7 +660,7 @@ vector<float> Muse_SerialConnection::getMagnetometerCalibParams() {
 
 		if (calib_buffer[0] == 'C' && calib_buffer[1] == 'C')
 		{
-			params.resize(Muse_HW::CALIB_PARAMS_MESSAGE_SIZE);
+			params.resize(MuseV2_HW::CALIB_PARAMS_MESSAGE_SIZE);
 
 			for (int i = 0; i < params.size(); ++i) {
 				uint8_t params_array[4] = {calib_buffer[c_element_size + 3 + offset * i],
@@ -677,10 +677,10 @@ vector<float> Muse_SerialConnection::getMagnetometerCalibParams() {
 
 }
 
-bool Muse_SerialConnection::isFrequencyAdmissible(uint8_t frequency) {
+bool MuseV2_SerialConnection::isFrequencyAdmissible(uint8_t frequency) {
 	bool result = false;
 
-	if (frequency <= Muse_HW::MAX_STREAM_FREQUENCY)
+	if (frequency <= MuseV2_HW::MAX_STREAM_FREQUENCY)
 		result = true;
 	else { printf("Invalid frequency."); }
 
@@ -688,7 +688,7 @@ bool Muse_SerialConnection::isFrequencyAdmissible(uint8_t frequency) {
 
 }
 
-Acceleration Muse_SerialConnection::getAcceleration(uint8_t frequency) {
+Acceleration MuseV2_SerialConnection::getAcceleration(uint8_t frequency) {
 
 	Acceleration out = {};
 
@@ -698,8 +698,8 @@ Acceleration Muse_SerialConnection::getAcceleration(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(Muse_HW::StreamRawData) + sizeof(frequency)];
-	sprintf(cmd, Muse_HW::StreamRawData, frequency);
+	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 	serial_connection_.Write(cmd);
 
 	transmission_status_ = true;
@@ -709,7 +709,7 @@ Acceleration Muse_SerialConnection::getAcceleration(uint8_t frequency) {
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t stream_buffer[Muse_HW::RAW_DATA_MESSAGE_SIZE];
+		uint8_t stream_buffer[MuseV2_HW::RAW_DATA_MESSAGE_SIZE];
 
 		int a_components = 3;
 		int a_element_size = 2;
@@ -736,7 +736,7 @@ Acceleration Muse_SerialConnection::getAcceleration(uint8_t frequency) {
 	return out;
 }
 
-AngularVelocity Muse_SerialConnection::getAngularVelocity(uint8_t frequency) {
+AngularVelocity MuseV2_SerialConnection::getAngularVelocity(uint8_t frequency) {
 
 	AngularVelocity out = {};
 
@@ -746,8 +746,8 @@ AngularVelocity Muse_SerialConnection::getAngularVelocity(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(Muse_HW::StreamRawData) + sizeof(frequency)];
-	sprintf(cmd, Muse_HW::StreamRawData, frequency);
+	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
 
@@ -762,7 +762,7 @@ AngularVelocity Muse_SerialConnection::getAngularVelocity(uint8_t frequency) {
 		int g_element_size = 2;
 		int offset = 7;
 
-		uint8_t stream_buffer[Muse_HW::RAW_DATA_MESSAGE_SIZE];
+		uint8_t stream_buffer[MuseV2_HW::RAW_DATA_MESSAGE_SIZE];
 
 		serial_connection_.Read(stream_buffer, sizeof(stream_buffer));
 
@@ -784,7 +784,7 @@ AngularVelocity Muse_SerialConnection::getAngularVelocity(uint8_t frequency) {
 	return out;
 }
 
-Imu Muse_SerialConnection::getIMU(uint8_t frequency) {
+Imu MuseV2_SerialConnection::getIMU(uint8_t frequency) {
 	
 	Imu out = {};
 
@@ -794,8 +794,8 @@ Imu Muse_SerialConnection::getIMU(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(Muse_HW::StreamRawData) + sizeof(frequency)];
-	sprintf(cmd, Muse_HW::StreamRawData, frequency);
+	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
 
@@ -820,7 +820,7 @@ Imu Muse_SerialConnection::getIMU(uint8_t frequency) {
 
 		int offset;
 
-		uint8_t stream_buffer[Muse_HW::RAW_DATA_MESSAGE_SIZE];
+		uint8_t stream_buffer[MuseV2_HW::RAW_DATA_MESSAGE_SIZE];
 		serial_connection_.Read(stream_buffer, sizeof(stream_buffer));
 
 		if ((stream_buffer[36] == 'Q' && stream_buffer[37] == 'Q') &&
@@ -876,7 +876,7 @@ Imu Muse_SerialConnection::getIMU(uint8_t frequency) {
 	return out;
 }
 
-MagneticField Muse_SerialConnection::getMag(uint8_t frequency) {
+MagneticField MuseV2_SerialConnection::getMag(uint8_t frequency) {
 	MagneticField out = {};
 
 	if (!checkConnectionStatus())
@@ -885,8 +885,8 @@ MagneticField Muse_SerialConnection::getMag(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(Muse_HW::StreamRawData) + sizeof(frequency)];
-	sprintf(cmd, Muse_HW::StreamRawData, frequency);
+	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
 
@@ -900,7 +900,7 @@ MagneticField Muse_SerialConnection::getMag(uint8_t frequency) {
 		int m_element_size = 2;
 		int offset = 16;
 
-		uint8_t stream_buffer[Muse_HW::RAW_DATA_MESSAGE_SIZE];
+		uint8_t stream_buffer[MuseV2_HW::RAW_DATA_MESSAGE_SIZE];
 		serial_connection_.Read(stream_buffer, sizeof(stream_buffer));
 
 		if (stream_buffer[14] == 'M' && stream_buffer[15] == 'M')
@@ -922,7 +922,7 @@ MagneticField Muse_SerialConnection::getMag(uint8_t frequency) {
 	return out;
 }
 
-Quaternion Muse_SerialConnection::getQuaternion(uint8_t frequency) {
+Quaternion MuseV2_SerialConnection::getQuaternion(uint8_t frequency) {
 	Quaternion out = {};
 
 	if (!checkConnectionStatus())
@@ -931,8 +931,8 @@ Quaternion Muse_SerialConnection::getQuaternion(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(Muse_HW::StreamRawData) + sizeof(frequency)];
-	sprintf(cmd, Muse_HW::StreamRawData, frequency);
+	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
 
@@ -946,7 +946,7 @@ Quaternion Muse_SerialConnection::getQuaternion(uint8_t frequency) {
 		int q_element_size = 4;
 		int offset = 38;
 
-		uint8_t stream_buffer[Muse_HW::RAW_DATA_MESSAGE_SIZE];
+		uint8_t stream_buffer[MuseV2_HW::RAW_DATA_MESSAGE_SIZE];
 		serial_connection_.Read(stream_buffer, sizeof(stream_buffer));
 
 		if (stream_buffer[36] == 'Q' && stream_buffer[37] == 'Q')
@@ -971,7 +971,7 @@ Quaternion Muse_SerialConnection::getQuaternion(uint8_t frequency) {
 	return out;
 }
 
-EulerAngles Muse_SerialConnection::getRPY(uint8_t frequency) {
+EulerAngles MuseV2_SerialConnection::getRPY(uint8_t frequency) {
 
 	EulerAngles out = {};
 
@@ -981,8 +981,8 @@ EulerAngles Muse_SerialConnection::getRPY(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(Muse_HW::StreamRawData) + sizeof(frequency)];
-	sprintf(cmd, Muse_HW::StreamRawData, frequency);
+	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
 
@@ -996,7 +996,7 @@ EulerAngles Muse_SerialConnection::getRPY(uint8_t frequency) {
 		int q_element_size = 4;
 		int offset = 38;
 
-		uint8_t stream_buffer[Muse_HW::RAW_DATA_MESSAGE_SIZE];
+		uint8_t stream_buffer[MuseV2_HW::RAW_DATA_MESSAGE_SIZE];
 		serial_connection_.Read(stream_buffer, sizeof(stream_buffer));
 
 		if (stream_buffer[36] == 'Q' && stream_buffer[37] == 'Q')
@@ -1039,7 +1039,7 @@ EulerAngles Muse_SerialConnection::getRPY(uint8_t frequency) {
 	return out;
 }
 
-uint32_t Muse_SerialConnection::getAvailableMemory() {
+uint32_t MuseV2_SerialConnection::getAvailableMemory() {
 
 	uint32_t out = 0;
 
@@ -1048,13 +1048,13 @@ uint32_t Muse_SerialConnection::getAvailableMemory() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetAvailableMemory);
+	serial_connection_.Write(MuseV2_HW::GetAvailableMemory);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
-		uint8_t memory_buffer[Muse_HW::MEMORY_BUFFER_SIZE];
+		uint8_t memory_buffer[MuseV2_HW::MEMORY_BUFFER_SIZE];
 		serial_connection_.Read(memory_buffer, sizeof(memory_buffer));
 
 		if (memory_buffer[0] == 'S' && memory_buffer[1] == 'S')
@@ -1068,7 +1068,7 @@ uint32_t Muse_SerialConnection::getAvailableMemory() {
 
 }
 
-bool  Muse_SerialConnection::eraseMemory() {
+bool  MuseV2_SerialConnection::eraseMemory() {
 
 	bool out = false;
 
@@ -1077,18 +1077,18 @@ bool  Muse_SerialConnection::eraseMemory() {
 
 	stopTransmission();
 
-	if (serial_connection_.Write(Muse_HW::EraseMemory) > 0)
+	if (serial_connection_.Write(MuseV2_HW::EraseMemory) > 0)
 		out = true;
 
 	return out;
 
 }
 
-vector<Log> Muse_SerialConnection::getLogs() {
+vector<Log> MuseV2_SerialConnection::getLogs() {
 
 	vector<Log> out = {};
 
-	uint8_t log_ack_buffer[Muse_HW::LOG_ACK_BUFFER_SIZE];
+	uint8_t log_ack_buffer[MuseV2_HW::LOG_ACK_BUFFER_SIZE];
 	serial_connection_.Read(log_ack_buffer, sizeof(log_ack_buffer));
 
 	if (log_ack_buffer[0] == 'P' && log_ack_buffer[1] == 'K' && log_ack_buffer[2] > 0 && log_ack_buffer[2] <= 5) {
@@ -1098,7 +1098,7 @@ vector<Log> Muse_SerialConnection::getLogs() {
 		float tempF[3];
 		uint8_t msgData[36];
 
-		for (int j = 8; j < Muse_HW::LOG_BUFFER_SIZE; j++)
+		for (int j = 8; j < MuseV2_HW::LOG_BUFFER_SIZE; j++)
 		{
 			Log log;
 
@@ -1113,7 +1113,7 @@ vector<Log> Muse_SerialConnection::getLogs() {
 				if (j % 2 == 0)
 				{
 
-					if (log.mode == Muse_HW::LOG_QUATERNION) {
+					if (log.mode == MuseV2_HW::LOG_QUATERNION) {
 						uint8_t data[2] = { log_ack_buffer[j + 1], log_ack_buffer[j] };
 						temp[dataIndex % 3] = *reinterpret_cast<short*>(data);
 					}
@@ -1131,7 +1131,7 @@ vector<Log> Muse_SerialConnection::getLogs() {
 
 					if (dataIndex == 3) {
 
-						if (log.mode == Muse_HW::LOG_QUATERNION) {
+						if (log.mode == MuseV2_HW::LOG_QUATERNION) {
 
 							float tempQ[4];
 							float tempN = 0;
@@ -1170,7 +1170,7 @@ vector<Log> Muse_SerialConnection::getLogs() {
 						log.gyroscope_angular_velocity.y = tempF[1];
 						log.gyroscope_angular_velocity.z = tempF[2];
 
-						if (log.mode == Muse_HW::LOG_HDR)
+						if (log.mode == MuseV2_HW::LOG_HDR)
 							dataIndex = 0;
 
 					}
@@ -1181,7 +1181,7 @@ vector<Log> Muse_SerialConnection::getLogs() {
 						log.magnetic_field.y = temp[1];
 						log.magnetic_field.z = temp[2];
 
-						if (log.mode == Muse_HW::LOG_RAW)
+						if (log.mode == MuseV2_HW::LOG_RAW)
 							dataIndex = 0;
 					}
 
@@ -1214,7 +1214,7 @@ vector<Log> Muse_SerialConnection::getLogs() {
 				}
 
 			}
-			if (log.mode == Muse_HW::LOG_HIGH_RESOLUTION) {
+			if (log.mode == MuseV2_HW::LOG_HIGH_RESOLUTION) {
 
 				msgData[dataIndex % 36] = log_ack_buffer[j];
 				dataIndex++;
@@ -1295,7 +1295,7 @@ vector<Log> Muse_SerialConnection::getLogs() {
 
 }
 
-vector<Log> Muse_SerialConnection::readMemory() {
+vector<Log> MuseV2_SerialConnection::readMemory() {
 	vector<Log> out = {};
 
 	if (!checkConnectionStatus())
@@ -1303,14 +1303,14 @@ vector<Log> Muse_SerialConnection::readMemory() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::ReadMemory);
+	serial_connection_.Write(MuseV2_HW::ReadMemory);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
 	if (serial_connection_.Available() > 0) {
 
-		uint8_t memory_buffer[Muse_HW::MEMORY_BUFFER_SIZE];
+		uint8_t memory_buffer[MuseV2_HW::MEMORY_BUFFER_SIZE];
 		serial_connection_.Read(memory_buffer, sizeof(memory_buffer));
 
 		if (memory_buffer[0] == 'N' && memory_buffer[1] == 'N') {
@@ -1318,7 +1318,7 @@ vector<Log> Muse_SerialConnection::readMemory() {
 			uint8_t bytes[4] = {memory_buffer[5],memory_buffer[4], memory_buffer[3], memory_buffer[2] };
 			int bytes_to_read = *reinterpret_cast<int*>(bytes);
 
-			if (bytes_to_read < Muse_HW::LOG_ACK_BUFFER_SIZE)
+			if (bytes_to_read < MuseV2_HW::LOG_ACK_BUFFER_SIZE)
 				return out;
 
 			int i = 0;
@@ -1326,12 +1326,12 @@ vector<Log> Muse_SerialConnection::readMemory() {
 			int n = 1;
 			while (i < bytes_to_read) {
 
-				if ((i / Muse_HW::LOG_BUFFER_SIZE) % 20 == 0) {
-					serial_connection_.Write(Muse_HW::PacketOK);
+				if ((i / MuseV2_HW::LOG_BUFFER_SIZE) % 20 == 0) {
+					serial_connection_.Write(MuseV2_HW::PacketOK);
 					Sleep(10);
 				}
 
-				if (n == (bytes_to_read * 25 * x) / (100 * Muse_HW::LOG_BUFFER_SIZE)) {
+				if (n == (bytes_to_read * 25 * x) / (100 * MuseV2_HW::LOG_BUFFER_SIZE)) {
 					printf("Advancement: %d %%", 25 * x);
 					x++;
 				}
@@ -1345,7 +1345,7 @@ vector<Log> Muse_SerialConnection::readMemory() {
 				}
 				else {
 					out.insert(out.end(), temp.begin(), temp.end());
-					i += Muse_HW::LOG_BUFFER_SIZE;
+					i += MuseV2_HW::LOG_BUFFER_SIZE;
 					n++;
 				}
 
@@ -1357,7 +1357,7 @@ vector<Log> Muse_SerialConnection::readMemory() {
 	return out;
 }
 
-vector<pair<int, string>>  Muse_SerialConnection::getFiles() {
+vector<pair<int, string>>  MuseV2_SerialConnection::getFiles() {
 
 	vector<pair<int, string>> out = {};
 
@@ -1366,7 +1366,7 @@ vector<pair<int, string>>  Muse_SerialConnection::getFiles() {
 
 	stopTransmission();
 
-	serial_connection_.Write(Muse_HW::GetFiles);
+	serial_connection_.Write(MuseV2_HW::GetFiles);
 
 	time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
@@ -1419,7 +1419,7 @@ vector<pair<int, string>>  Muse_SerialConnection::getFiles() {
 
 }
 
-bool Muse_SerialConnection::storeLogs(string& dest_file, vector<Log>& logs) {
+bool MuseV2_SerialConnection::storeLogs(string& dest_file, vector<Log>& logs) {
 
 	bool out = false;
 
@@ -1524,7 +1524,7 @@ bool Muse_SerialConnection::storeLogs(string& dest_file, vector<Log>& logs) {
 	return out;
 }
 
-vector<Log> Muse_SerialConnection::readFile(int file_number) {
+vector<Log> MuseV2_SerialConnection::readFile(int file_number) {
 	
 	vector<Log> out = {};
 
@@ -1544,7 +1544,7 @@ vector<Log> Muse_SerialConnection::readFile(int file_number) {
 		// Create message
 		std::stringstream s;
 		s << std::setfill('0') << std::setw(3) << file_number;
-		std::string number =Muse_HW::ReadFile + s.str() + "!?";
+		std::string number =MuseV2_HW::ReadFile + s.str() + "!?";
 
 		// Send message
 		serial_connection_.Write(number);
@@ -1556,7 +1556,7 @@ vector<Log> Muse_SerialConnection::readFile(int file_number) {
 
 			// Read message
 
-			uint8_t memory_buffer[Muse_HW::MEMORY_BUFFER_SIZE];
+			uint8_t memory_buffer[MuseV2_HW::MEMORY_BUFFER_SIZE];
 			serial_connection_.Read(memory_buffer, sizeof(memory_buffer));
 
 			if (memory_buffer[0] == 'N' && memory_buffer[1] == 'N') {
@@ -1564,7 +1564,7 @@ vector<Log> Muse_SerialConnection::readFile(int file_number) {
 				uint8_t bytes[4] = { memory_buffer[5], memory_buffer[4], memory_buffer[3], memory_buffer[2] };
 				int bytes_to_read = *reinterpret_cast<int*>(bytes);
 
-				if (bytes_to_read < Muse_HW::LOG_BUFFER_SIZE)
+				if (bytes_to_read < MuseV2_HW::LOG_BUFFER_SIZE)
 					return out;
 
 				int i = 0;
@@ -1573,12 +1573,12 @@ vector<Log> Muse_SerialConnection::readFile(int file_number) {
 				while (i < bytes_to_read) {
 					vector<Log> temp;
 
-					if ((i / Muse_HW::LOG_BUFFER_SIZE) % 20 == 0) {
-						serial_connection_.Write(Muse_HW::PacketOK);
+					if ((i / MuseV2_HW::LOG_BUFFER_SIZE) % 20 == 0) {
+						serial_connection_.Write(MuseV2_HW::PacketOK);
 						Sleep(10);
 					}
 
-					if (n == (bytes_to_read * 25 * x) / (100 * Muse_HW::LOG_BUFFER_SIZE)) {
+					if (n == (bytes_to_read * 25 * x) / (100 * MuseV2_HW::LOG_BUFFER_SIZE)) {
 						printf("Advancement: %d %%", 25 * x);
 						x++;
 					}
@@ -1590,7 +1590,7 @@ vector<Log> Muse_SerialConnection::readFile(int file_number) {
 					}
 					else {
 						out.insert(out.end(), temp.begin(), temp.end());
-						i += Muse_HW::LOG_BUFFER_SIZE;
+						i += MuseV2_HW::LOG_BUFFER_SIZE;
 						n++;
 					}
 

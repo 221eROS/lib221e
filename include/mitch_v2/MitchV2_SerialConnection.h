@@ -1,7 +1,7 @@
-#ifndef MITCH_SERIAL_CONNECTION_H
-#define MITCH_SERIAL_CONNECTION_H
+#ifndef MITCH_V2_SERIAL_CONNECTION_H
+#define MITCH_V2_SERIAL_CONNECTION_H
 
-#include <mitch/Mitch_HW.h>
+#include <mitch_v2/MitchV2_HW.h>
 #include <serial/SerialConnection.h>
 
 #ifdef _WIN32
@@ -20,10 +20,10 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 using namespace Connection;
-using namespace Mitch;
+using namespace MitchV2;
 using namespace boost::posix_time;
 
-namespace Mitch
+namespace MitchV2
 {
 
 	/**
@@ -31,7 +31,7 @@ namespace Mitch
 	 *
 	 * Connect to a Mitch device via Serial Port
 	 */
-	class Mitch_SerialConnection
+	class MitchV2_SerialConnection
 	{
 	private:
 		SerialConnection serial_connection_;
@@ -57,7 +57,7 @@ namespace Mitch
 		 * @param stopbits The number of exploited stop bits, default is stopbits_one
 		 * @param flowcontrol The type of exploited flowcontrol, default is flowcontrol_none
 		 */
-		Mitch_SerialConnection(const std::string &port = "",
+		MitchV2_SerialConnection(const std::string &port = "",
 							   uint32_t baudrate = 115200,
 							   Timeout timeout = Timeout(),
 							   bytesize_t bytesize = bytesize_t::eightbits,
@@ -65,7 +65,7 @@ namespace Mitch
 							   stopbits_t stopbits = stopbits_t::stopbits_one,
 							   flowcontrol_t flowcontrol = flowcontrol_t::flowcontrol_none);
 
-		~Mitch_SerialConnection();
+		~MitchV2_SerialConnection();
 
 		// Properties
 
@@ -115,14 +115,14 @@ namespace Mitch
 		 * @param state_params The desired state parameters, default is NULL
 		 * @return uint8_t* - The command buffer
 		 */
-		static uint8_t *cmdState(bool enable_Read = true, Mitch_HW::SystemState state = Mitch_HW::SystemState::SYS_NULL, uint8_t *state_params = NULL);
+		static uint8_t *cmdState(bool enable_Read = true, MitchV2_HW::SystemState state = MitchV2_HW::SystemState::SYS_NULL, uint8_t *state_params = NULL);
 		
 		/**
 		 * @brief Get the current state of the device
 		 * 
 		 * @return Mitch_HW::SystemState - The state of the device
 		 */
-		Mitch_HW::SystemState getState();
+		MitchV2_HW::SystemState getState();
 
 		// Battery
 
@@ -191,7 +191,7 @@ namespace Mitch
 		 * @return true if the streaming is started
 		 * @return false otherwise
 		 */
-		bool startStreaming(Mitch_HW::LogMode mode, Mitch_HW::LogFrequency frequency);
+		bool startStreaming(MitchV2_HW::LogMode mode, MitchV2_HW::LogFrequency frequency);
 
 		/**
 		 * @brief Stop data streaming
@@ -209,7 +209,7 @@ namespace Mitch
 		* @return true if the streaming is started
 		* @return false otherwise
 		*/
-		bool startLog(Mitch_HW::LogMode mode, Mitch_HW::LogFrequency frequency);
+		bool startLog(MitchV2_HW::LogMode mode, MitchV2_HW::LogFrequency frequency);
 
 		/**
 		* @brief Stop data streaming

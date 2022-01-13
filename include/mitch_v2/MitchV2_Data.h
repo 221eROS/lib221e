@@ -1,10 +1,10 @@
-#ifndef MITCH_DATA_H
-#define MITCH_DATA_H
+#ifndef MITCH_V2_DATA_H
+#define MITCH_V2_DATA_H
 
 #include <sstream>
 #include <array>
 
-namespace Mitch
+namespace MitchV2
 {
     /**
      * @brief A Mitch Data object
@@ -19,7 +19,7 @@ namespace Mitch
      * - pressure: the 16-channels insole pressure reading.
      * 
      */
-    class Mitch_Data
+    class MitchV2_Data
     {
     private:
         unsigned short device_id_;

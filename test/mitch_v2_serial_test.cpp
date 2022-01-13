@@ -1,7 +1,7 @@
 #include <thread>
-#include <mitch/Mitch_SerialConnection.h>
+#include <mitch_v2/MitchV2_SerialConnection.h>
 
-using namespace Mitch;
+using namespace MitchV2;
 
 int main()
 {
@@ -11,14 +11,14 @@ int main()
 
 		// Serial Connection object - input: Serial port
 		//Mitch_SerialConnection my_serial("/dev/ttyACM0"); 
-		Mitch_SerialConnection my_serial("COM4");
+		MitchV2_SerialConnection my_serial("COM4");
 
 		// Check if the device is connected
 		if (my_serial.checkConnectionStatus() == true) {
 			puts("Connected.");
 
 			// Check if the device is in IDLE state
-			if (my_serial.getState() == Mitch_HW::SystemState::SYS_IDLE) { 
+			if (my_serial.getState() == MitchV2_HW::SystemState::SYS_IDLE) { 
 				puts("System in Idle state.");
 
 				// Get firmware version
@@ -58,7 +58,7 @@ int main()
 
 					// Start data acquisition - input: acquisition mode and frequency 
 					// Being the connection serial, the log mode is required
-					bool acq_started = my_serial.startStreaming(Mitch_HW::LogMode::LOG_MODE_IMU, Mitch_HW::LogFrequency::LOG_FREQ_50HZ);
+					bool acq_started = my_serial.startStreaming(MitchV2_HW::LogMode::LOG_MODE_IMU, MitchV2_HW::LogFrequency::LOG_FREQ_50HZ);
 					if (acq_started) {
 						puts("Acquisition Started.");
 

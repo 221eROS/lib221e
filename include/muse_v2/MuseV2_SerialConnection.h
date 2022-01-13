@@ -1,7 +1,7 @@
-#ifndef MUSE_SERIAL_CONNECTION_H
-#define MUSE_SERIAL_CONNECTION_H
+#ifndef MUSE_V2_SERIAL_CONNECTION_H
+#define MUSE_V2_SERIAL_CONNECTION_H
 
-#include <muse/Muse_HW.h>
+#include <muse_v2/MuseV2_HW.h>
 #include <serial/SerialConnection.h>
 
 #ifdef _WIN32
@@ -28,7 +28,7 @@ using namespace Connection;
 using namespace std;
 using namespace boost::posix_time;
 
-namespace Muse
+namespace MuseV2
 {
 		struct Acceleration {
 			float x, y, z;
@@ -66,7 +66,7 @@ namespace Muse
 			Quaternion quaternion;
 		};
 
-		class Muse_SerialConnection
+		class MuseV2_SerialConnection
 		{
 		private:
 			SerialConnection serial_connection_;
@@ -81,14 +81,14 @@ namespace Muse
 
 		public:
 
-			Muse_SerialConnection(const std::string& port = "",
+			MuseV2_SerialConnection(const std::string& port = "",
 				uint32_t baudrate = 115200,
 				Timeout timeout = Timeout(),
 				bytesize_t bytesize = bytesize_t::eightbits,
 				parity_t parity = parity_t::parity_none,
 				stopbits_t stopbits = stopbits_t::stopbits_one,
 				flowcontrol_t flowcontrol = flowcontrol_t::flowcontrol_none);
-			~Muse_SerialConnection();
+			~MuseV2_SerialConnection();
 
 			// Properties
 
