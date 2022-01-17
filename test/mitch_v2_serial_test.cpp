@@ -11,7 +11,7 @@ int main()
 
 		// Serial Connection object - input: Serial port
 		//Mitch_SerialConnection my_serial("/dev/ttyACM0"); 
-		MitchV2_SerialConnection my_serial("COM4");
+		MitchV2_SerialConnection my_serial("/dev/ttyACM0");
 
 		// Check if the device is connected
 		if (my_serial.checkConnectionStatus() == true) {
@@ -23,11 +23,11 @@ int main()
 
 				// Get firmware version
 				string firmware_version = my_serial.getFirmwareVersion();
-				printf("firmware version : %s \n", firmware_version);
+				printf("firmware version : %s \n", firmware_version.c_str());
 
 				// Get BLE name
 				string ble_name = my_serial.getBLEName();
-				printf("BLE name: %s \n", ble_name);
+				printf("BLE name: %s \n", ble_name.c_str());
 
 				// Get device ID
 				uint16_t device_id = my_serial.getDeviceId();

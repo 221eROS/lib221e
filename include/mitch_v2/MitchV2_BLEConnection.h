@@ -250,7 +250,7 @@ namespace MitchV2
 		 * @return true if the command has been written
 		 * @return false otherwise
 		 */
-		bool sendStartAcquisitionCommand(Mitch_HW::StreamMode mode, Mitch_HW::StreamFrequency frequency);
+		bool sendStartAcquisitionCommand(MitchV2_HW::StreamMode mode, MitchV2_HW::StreamFrequency frequency);
 
 		/**
 		 * @brief Check if the Acquisition is started from the acquisition_started_ parameter (if previously notified by the function handleAcquisition)

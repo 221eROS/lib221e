@@ -1,10 +1,10 @@
-#include <mitch/Mitch_StreamingData.h>
+#include <mitch_v2/MitchV2_StreamingData.h>
 
-using namespace Mitch;
+using namespace MitchV2;
 
-Mitch_Data Mitch_StreamingData::dataTypePressure(std::array<uint8_t, Mitch_HW::STREAM_PACKET_DIM_PRESSURE> current_payload)
+MitchV2_Data MitchV2_StreamingData::dataTypePressure(std::array<uint8_t, MitchV2_HW::STREAM_PACKET_DIM_PRESSURE> current_payload)
 {
-    Mitch_Data current_data;
+    MitchV2_Data current_data;
     std::array<uint8_t, 2> tmp;
 
     // Decode ID field 
@@ -17,16 +17,16 @@ Mitch_Data Mitch_StreamingData::dataTypePressure(std::array<uint8_t, Mitch_HW::S
 
     // Decode data - pressure
     std::array<float, 16> current_pressure;
-    for (int i = 2; i < (uint8_t)Mitch_HW::StreamPacketDimension::STREAM_PACKET_DIM_PRESSURE; i++)
+    for (int i = 2; i < (uint8_t)MitchV2_HW::StreamPacketDimension::STREAM_PACKET_DIM_PRESSURE; i++)
          current_pressure[i - 2] = (int)(100 * (1 - (float)current_payload[i] / 255));
     current_data.setPressure(current_pressure);
 
     return current_data;
 }
 
-Mitch_Data Mitch_StreamingData::dataType6DOFandTOF(std::array<uint8_t, Mitch_HW::STREAM_PACKET_DIM_6DOF_TOF> current_payload, float gyr_res, float axl_res)
+MitchV2_Data MitchV2_StreamingData::dataType6DOFandTOF(std::array<uint8_t, MitchV2_HW::STREAM_PACKET_DIM_6DOF_TOF> current_payload, float gyr_res, float axl_res)
 {
-    Mitch_Data current_data;
+    MitchV2_Data current_data;
     std::array<uint8_t, 2> tmp;
 
     // Decode ID field 
@@ -68,9 +68,9 @@ Mitch_Data Mitch_StreamingData::dataType6DOFandTOF(std::array<uint8_t, Mitch_HW:
     return current_data;
 }
 
-Mitch_Data Mitch_StreamingData::dataTypeTOF(std::array<uint8_t, Mitch_HW::STREAM_PACKET_DIM_TOF> current_payload)
+MitchV2_Data MitchV2_StreamingData::dataTypeTOF(std::array<uint8_t, MitchV2_HW::STREAM_PACKET_DIM_TOF> current_payload)
 {
-    Mitch_Data current_data;
+    MitchV2_Data current_data;
     std::array<uint8_t, 2> tmp;
 
     // Decode ID field 
@@ -90,9 +90,9 @@ Mitch_Data Mitch_StreamingData::dataTypeTOF(std::array<uint8_t, Mitch_HW::STREAM
     return current_data;
 }
 
-Mitch_Data Mitch_StreamingData::dataType6DOF(std::array<uint8_t, Mitch_HW::STREAM_PACKET_DIM_6DOF> current_payload, float gyr_res, float axl_res)
+MitchV2_Data MitchV2_StreamingData::dataType6DOF(std::array<uint8_t, MitchV2_HW::STREAM_PACKET_DIM_6DOF> current_payload, float gyr_res, float axl_res)
 {
-    Mitch_Data current_data;
+    MitchV2_Data current_data;
     std::array<uint8_t, 2> tmp;
 
     // Decode ID field 
@@ -128,9 +128,9 @@ Mitch_Data Mitch_StreamingData::dataType6DOF(std::array<uint8_t, Mitch_HW::STREA
     return current_data;
 }
 
-Mitch_Data Mitch_StreamingData::dataType9DOF(std::array<uint8_t, Mitch_HW::STREAM_PACKET_DIM_9DOF> current_payload, float gyr_res, float axl_res, float mag_res)
+MitchV2_Data MitchV2_StreamingData::dataType9DOF(std::array<uint8_t, MitchV2_HW::STREAM_PACKET_DIM_9DOF> current_payload, float gyr_res, float axl_res, float mag_res)
 {
-    Mitch_Data current_data;
+    MitchV2_Data current_data;
     std::array<uint8_t, 2>  tmp;
 
     // Set timestamp

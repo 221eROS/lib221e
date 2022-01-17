@@ -691,7 +691,7 @@ void SerialConnection::SerialConnectionImpl::SetTimeout(Timeout timeout)
     timeout_ = timeout;
 }
 
-Pit221e::Connection::Timeout SerialConnection::SerialConnectionImpl::GetTimeout() const
+Connection::Timeout SerialConnection::SerialConnectionImpl::GetTimeout() const
 {
     return timeout_;
 }
@@ -715,7 +715,7 @@ void SerialConnection::SerialConnectionImpl::SetBytesize(bytesize_t bytesize)
         ReconfigurePort();
 }
 
-Pit221e::Connection::bytesize_t SerialConnection::SerialConnectionImpl::GetBytesize() const
+Connection::bytesize_t SerialConnection::SerialConnectionImpl::GetBytesize() const
 {
     return bytesize_;
 }
@@ -727,7 +727,7 @@ void SerialConnection::SerialConnectionImpl::SetParity(parity_t parity)
         ReconfigurePort();
 }
 
-Pit221e::Connection::parity_t SerialConnection::SerialConnectionImpl::GetParity() const
+Connection::parity_t SerialConnection::SerialConnectionImpl::GetParity() const
 {
     return parity_;
 }
@@ -739,7 +739,7 @@ void SerialConnection::SerialConnectionImpl::SetStopbits(stopbits_t stopbits)
         ReconfigurePort();
 }
 
-Pit221e::Connection::stopbits_t SerialConnection::SerialConnectionImpl::GetStopbits() const
+Connection::stopbits_t SerialConnection::SerialConnectionImpl::GetStopbits() const
 {
     return stopbits_;
 }
@@ -751,7 +751,7 @@ void SerialConnection::SerialConnectionImpl::SetFlowcontrol(flowcontrol_t flowco
         ReconfigurePort();
 }
 
-Pit221e::Connection::flowcontrol_t SerialConnection::SerialConnectionImpl::GetFlowcontrol() const
+Connection::flowcontrol_t SerialConnection::SerialConnectionImpl::GetFlowcontrol() const
 {
     return flowcontrol_;
 }

@@ -150,7 +150,7 @@ namespace MitchV2
 		string getFirmwareVersion();
 
 		/**
-		* @brief Get the name of the device’s Bluetooth
+		* @brief Get the name of the deviceï¿½s Bluetooth
 		*
 		* @return string - The name od the device's Bluetooth
 		*/

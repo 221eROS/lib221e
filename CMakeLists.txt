@@ -32,8 +32,8 @@ include_directories("${PROJECT_SOURCE_DIR}")
 include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories("${PROJECT_BINARY_DIR}")
 
-#set(Boost_DEBUG 1)
-find_package(Boost REQUIRED)
+set(Boost_DEBUG 1)
+find_package(Boost COMPONENTS date_time)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
@@ -95,6 +95,12 @@ if(UNIX)
                             ${PROJECT_SOURCE_DIR}/mitch_v2/MitchV2_BLEConnection.cpp
                             ${PROJECT_SOURCE_DIR}/mitch_v2/MitchV2_StreamingData.cpp	
    )
+   set(MUSE_V2_INCLUDES	${PROJECT_INCLUDE_DIR}/muse_v2/MuseV2_HW.h
+                            ${PROJECT_INCLUDE_DIR}/muse_v2/MuseV2_SerialConnection.h	
+   )
+
+    set(MUSE_V2_SOURCES	    ${PROJECT_SOURCE_DIR}/muse_v2/MuseV2_SerialConnection.cpp	
+   )
 else()
     set(MITCH_V2_INCLUDES	${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_HW.h
                             ${PROJECT_INCLUDE_DIR}/mitch_v2/MitchV2_Data.h
@@ -112,8 +118,8 @@ else()
    )
 endif()
 
-add_library(MitchV2 STATIC ${MITCH_V2_INCLUDES} ${MITCH_V2_SOURCES} ${Boost_LIBRARIES})
-target_link_libraries(MitchV2 Connection)
+add_library(MitchV2 STATIC ${MITCH_V2_INCLUDES} ${MITCH_V2_SOURCES})
+target_link_libraries(MitchV2 Connection ${Boost_DATE_TIME_LIBRARY})
 
 install(TARGETS MitchV2
   # IMPORTANT: Add the Core library to the "export-set"
@@ -123,8 +129,8 @@ install(TARGETS MitchV2
   PUBLIC_HEADER DESTINATION "${INSTALL_INCLUDE_DIR}/mitch_v2"
     COMPONENT dev)
 
-add_library(MuseV2 STATIC ${MUSE_V2_INCLUDES} ${MUSE_V2_SOURCES} ${Boost_LIBRARIES})
-target_link_libraries(MuseV2 Connection)
+add_library(MuseV2 STATIC ${MUSE_V2_INCLUDES} ${MUSE_V2_SOURCES})
+target_link_libraries(MuseV2 Connection ${Boost_DATE_TIME_LIBRARY})
 
 install(TARGETS MuseV2
   # IMPORTANT: Add the Core library to the "export-set"

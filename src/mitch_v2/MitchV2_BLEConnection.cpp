@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-using namespace MitchV2_;
+using namespace MitchV2;
 using namespace std::placeholders;
 
 std::ofstream myfile;
@@ -477,7 +477,7 @@ bool MitchV2_BLEConnection::sendStopAcquisitionCommand()
     command_buffer[1] = (uint8_t)resp_len;
     command_buffer[2] = (uint8_t)MitchV2_HW::SystemState::SYS_TX;
 
-    cmd_ret_ = gattlib_write_char_by_uuid(connection, &g_cmd_uuid_, command_buffer, Mitch_HW::COMM_MESSAGE_LEN);
+    cmd_ret_ = gattlib_write_char_by_uuid(connection, &g_cmd_uuid_, command_buffer, MitchV2_HW::COMM_MESSAGE_LEN);
 
     if (cmd_ret_ != GATTLIB_SUCCESS)
     {
@@ -493,7 +493,7 @@ bool MitchV2_BLEConnection::sendStopAcquisitionCommand()
 
 }
 
-bool Mitch_BLEConnection::sendBatteryChargeCommand()
+bool MitchV2_BLEConnection::sendBatteryChargeCommand()
 {
     bool written = false;
 

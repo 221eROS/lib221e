@@ -13,8 +13,8 @@
         using std::string;
         using std::invalid_argument;
 
-        using Pit221e::Connection::SerialConnectionException;
-        using Pit221e::Connection::SerialConnectionIOException;
+        using Connection::SerialConnectionException;
+        using Connection::SerialConnectionIOException;
 
         class MillisecondTimer
         {
@@ -57,10 +57,10 @@
         public:
             SerialConnectionImpl(const std::string& port,
                 uint32_t baudrate,
-                Pit221e::Connection::bytesize_t bytesize,
-                Pit221e::Connection::parity_t parity,
-                Pit221e::Connection::stopbits_t stopbits,
-                Pit221e::Connection::flowcontrol_t flowcontrol);
+                Connection::bytesize_t bytesize,
+                Connection::parity_t parity,
+                Connection::stopbits_t stopbits,
+                Connection::flowcontrol_t flowcontrol);
 
             virtual ~SerialConnectionImpl();
 
@@ -110,7 +110,7 @@
 
             void SetTimeout(Timeout timeout);
 
-            Pit221e::Connection::Timeout GetTimeout() const;
+            Connection::Timeout GetTimeout() const;
 
             void SetBaudrate(uint32_t baudrate);
 
@@ -118,19 +118,19 @@
 
             void SetBytesize(bytesize_t bytesize);
 
-            Pit221e::Connection::bytesize_t GetBytesize() const;
+            Connection::bytesize_t GetBytesize() const;
 
             void SetParity(parity_t parity);
 
-            Pit221e::Connection::parity_t GetParity() const;
+            Connection::parity_t GetParity() const;
 
             void SetStopbits(stopbits_t stopbits);
 
-            Pit221e::Connection::stopbits_t GetStopbits() const;
+            Connection::stopbits_t GetStopbits() const;
 
             void SetFlowcontrol(flowcontrol_t flowcontrol);
 
-            Pit221e::Connection::flowcontrol_t GetFlowcontrol() const;
+            Connection::flowcontrol_t GetFlowcontrol() const;
 
             void ReadLock();
 

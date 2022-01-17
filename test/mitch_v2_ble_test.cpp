@@ -1,15 +1,15 @@
 #include <thread>
 #include <signal.h>
-#include <mitch/Mitch_BLEConnection.h>
+#include <mitch_v2/MitchV2_BLEConnection.h>
 
-using namespace _221e_Mitch;
+using namespace MitchV2;
 
 int main(int argc, const char *argv[])
 {
 	puts("Trying to Connect.");
 
 	// BLE Connection object - input: MAC address, command UUID, data UUID, .json file path
-	Mitch_BLEConnection my_ble("F2:71:C5:7A:6F:49", "d5913036-2d8a-41ee-85b9-4e361aa5c8a7", "09bf2c52-d1d9-c0b7-4145-475964544307", "/home/test/example.json");
+	MitchV2_BLEConnection my_ble("F2:71:C5:7A:6F:49", "d5913036-2d8a-41ee-85b9-4e361aa5c8a7", "09bf2c52-d1d9-c0b7-4145-475964544307", "/home/test/example.json");
 	//MitchBLEConnection my_ble("C7:87:A9:11:CF:62", "d5913036-2d8a-41ee-85b9-4e361aa5c8a7", "09bf2c52-d1d9-c0b7-4145-475964544307");
 	
 	// Scan BLE devices
@@ -37,10 +37,10 @@ int main(int argc, const char *argv[])
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 			// Check if the device is in IDLE state
-			if(my_ble.getState() == Mitch_HW::SystemState::SYS_IDLE){
+			if(my_ble.getState() == MitchV2_HW::SystemState::SYS_IDLE){
 				
 				// Write the Start Acquisition command - input: acquisition mode and frequency
-				my_ble.sendStartAcquisitionCommand(Mitch_HW::StreamMode::STREAM_MODE_6DOF, Mitch_HW::STREAM_FREQ_25Hz);
+				my_ble.sendStartAcquisitionCommand(MitchV2_HW::StreamMode::STREAM_MODE_6DOF, MitchV2_HW::STREAM_FREQ_25Hz);
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 				// Check if the acquisition is started

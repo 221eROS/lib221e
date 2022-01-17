@@ -44,7 +44,11 @@ void MuseV2_SerialConnection::stopTransmission()
 	if (checkConnectionStatus() && checkTransmissionStatus()) {
 		serial_connection_.Flush();
 		serial_connection_.Write(MuseV2_HW::StopTransmission);
+		#ifdef _WIN32
 		Sleep(1000);
+		#else
+		sleep(10);
+		#endif
 		while (serial_connection_.Available() > 0)
 			serial_connection_.Read();
 		transmission_status_ = false;
@@ -381,7 +385,11 @@ bool MuseV2_SerialConnection::setGyroscopeFullScale(const uint16_t value)
 
 	stopTransmission();
 
+	#ifdef _WIN32
 	Sleep(10);
+	#else
+	sleep(10);
+	#endif
 
 	serial_connection_.Write(cmd);
 
@@ -424,7 +432,11 @@ bool MuseV2_SerialConnection::setAccelerometerFullScale(const uint8_t value)
 
 	stopTransmission();
 
+	#ifdef _WIN32
 	Sleep(10);
+	#else
+	sleep(10);
+	#endif
 
 	serial_connection_.Write(cmd);
 
@@ -460,7 +472,11 @@ bool MuseV2_SerialConnection::setAccelerometerHDRFullScale(const uint16_t value)
 
 	stopTransmission();
 
+	#ifdef _WIN32
 	Sleep(10);
+	#else
+	sleep(10);
+	#endif
 
 	serial_connection_.Write(cmd);
 
@@ -1328,7 +1344,11 @@ vector<Log> MuseV2_SerialConnection::readMemory() {
 
 				if ((i / MuseV2_HW::LOG_BUFFER_SIZE) % 20 == 0) {
 					serial_connection_.Write(MuseV2_HW::PacketOK);
+					#ifdef _WIN32
 					Sleep(10);
+					#else
+					sleep(10);
+					#endif
 				}
 
 				if (n == (bytes_to_read * 25 * x) / (100 * MuseV2_HW::LOG_BUFFER_SIZE)) {
@@ -1575,7 +1595,11 @@ vector<Log> MuseV2_SerialConnection::readFile(int file_number) {
 
 					if ((i / MuseV2_HW::LOG_BUFFER_SIZE) % 20 == 0) {
 						serial_connection_.Write(MuseV2_HW::PacketOK);
+						#ifdef _WIN32
 						Sleep(10);
+						#else
+						sleep(10);
+						#endif
 					}
 
 					if (n == (bytes_to_read * 25 * x) / (100 * MuseV2_HW::LOG_BUFFER_SIZE)) {
