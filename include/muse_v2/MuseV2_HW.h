@@ -30,6 +30,7 @@ namespace MuseV2
 		static const uint8_t MEMORY_BUFFER_SIZE = 6;
 		static const uint8_t LOG_BUFFER_SIZE = 512;
 		static const uint8_t LOG_ACK_BUFFER_SIZE = 516;
+		static const uint8_t RAW_DATA_BUFFER_SIZE = 13;
 
 		// Operating Modes
 		typedef enum

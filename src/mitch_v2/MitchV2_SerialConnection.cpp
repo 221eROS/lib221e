@@ -534,7 +534,7 @@ uint8_t* MitchV2_SerialConnection::getClockOffset() {
 	std::time_t time_begin = time(0);
 	while (serial_connection_.Available() == 0 && ((intmax_t)(time(0) - time_begin) < 100));
 
-	uint8_t* clock_offset;
+	uint8_t* clock_offset = {};
 
 	if (serial_connection_.Available() > 0) {
 		uint8_t offset_buffer[MitchV2_HW::COMM_MESSAGE_LEN];
@@ -546,7 +546,7 @@ uint8_t* MitchV2_SerialConnection::getClockOffset() {
 			if (offset_buffer[2] == MitchV2_HW::CMD_ACK && offset_buffer[4] == (uint8_t)(MitchV2_HW::CMD_CLK_OFFSET + 0x80) && offset_buffer[5] == MitchV2_HW::CMD_ACK_SUCCESS) {
 
 				int temp_size = resp_len - VALUE_OFFSET;
-				uint8_t* clock_offset = (uint8_t*)malloc(sizeof(uint8_t) * temp_size);
+				clock_offset = (uint8_t*)malloc(sizeof(uint8_t) * temp_size);
 
 				for (int i = 0; i < resp_len - VALUE_OFFSET; ++i)
 					clock_offset[i] = offset_buffer[ACK_OFFSET + VALUE_OFFSET + temp_size - 1 - i];

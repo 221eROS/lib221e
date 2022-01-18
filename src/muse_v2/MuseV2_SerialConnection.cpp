@@ -1,4 +1,4 @@
-#include <muse_v2/MuseV2_SerialConnection.h>
+ #include <muse_v2/MuseV2_SerialConnection.h>
 
 using namespace MuseV2;
 
@@ -17,6 +17,14 @@ MuseV2_SerialConnection::MuseV2_SerialConnection(const string& port,
 	if (serial_connection_.IsOpen() == true)
 	{
 		serial_connection_.Flush();
+		serial_connection_.Write(MuseV2_HW::StopTransmission);
+		#ifdef _WIN32
+		Sleep(1000);
+		#else
+		sleep(10);
+		#endif
+		while (serial_connection_.Available() > 0)
+			serial_connection_.Read();
 		connection_status_ = true;
 
 	}
@@ -385,13 +393,13 @@ bool MuseV2_SerialConnection::setGyroscopeFullScale(const uint16_t value)
 
 	stopTransmission();
 
+	serial_connection_.Write(cmd);
+
 	#ifdef _WIN32
 	Sleep(10);
 	#else
 	sleep(10);
 	#endif
-
-	serial_connection_.Write(cmd);
 
 	return out;
 
@@ -432,13 +440,13 @@ bool MuseV2_SerialConnection::setAccelerometerFullScale(const uint8_t value)
 
 	stopTransmission();
 
+	serial_connection_.Write(cmd);
+
 	#ifdef _WIN32
 	Sleep(10);
 	#else
 	sleep(10);
 	#endif
-
-	serial_connection_.Write(cmd);
 
 	return out;
 }
@@ -472,13 +480,13 @@ bool MuseV2_SerialConnection::setAccelerometerHDRFullScale(const uint16_t value)
 
 	stopTransmission();
 
+	serial_connection_.Write(cmd);
+
 	#ifdef _WIN32
 	Sleep(10);
 	#else
 	sleep(10);
 	#endif
-
-	serial_connection_.Write(cmd);
 
 	return out;
 }
@@ -517,6 +525,12 @@ bool MuseV2_SerialConnection::setMagnetometerFullScale(const uint8_t value)
 
 	serial_connection_.Write(cmd);
 
+	#ifdef _WIN32
+	Sleep(10);
+	#else
+	sleep(10);
+	#endif
+
 	return out;
 }
 
@@ -543,6 +557,12 @@ bool MuseV2_SerialConnection::setLogMode(const uint8_t mode)
 
 	serial_connection_.Write(cmd);
 
+	#ifdef _WIN32
+	Sleep(10);
+	#else
+	sleep(10);
+	#endif
+
 	return out;
 }
 
@@ -567,6 +587,12 @@ bool MuseV2_SerialConnection::setLogFrequency(const uint8_t frequency)
 	stopTransmission();
 
 	serial_connection_.Write(cmd);
+
+	#ifdef _WIN32
+	Sleep(10);
+	#else
+	sleep(10);
+	#endif
 
 	return out;
 }
@@ -714,7 +740,7 @@ Acceleration MuseV2_SerialConnection::getAcceleration(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	char cmd[MuseV2_HW::RAW_DATA_BUFFER_SIZE];
 	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 	serial_connection_.Write(cmd);
 
@@ -762,7 +788,7 @@ AngularVelocity MuseV2_SerialConnection::getAngularVelocity(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	char cmd[MuseV2_HW::RAW_DATA_BUFFER_SIZE];
 	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
@@ -810,7 +836,7 @@ Imu MuseV2_SerialConnection::getIMU(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	char cmd[MuseV2_HW::RAW_DATA_BUFFER_SIZE];
 	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
@@ -901,7 +927,7 @@ MagneticField MuseV2_SerialConnection::getMag(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	char cmd[MuseV2_HW::RAW_DATA_BUFFER_SIZE];
 	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
@@ -947,7 +973,7 @@ Quaternion MuseV2_SerialConnection::getQuaternion(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	char cmd[MuseV2_HW::RAW_DATA_BUFFER_SIZE];
 	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);
@@ -997,7 +1023,7 @@ EulerAngles MuseV2_SerialConnection::getRPY(uint8_t frequency) {
 	while (serial_connection_.Available() > 0)
 		serial_connection_.Read();
 
-	char cmd[sizeof(MuseV2_HW::StreamRawData) + sizeof(frequency)];
+	char cmd[MuseV2_HW::RAW_DATA_BUFFER_SIZE];
 	sprintf(cmd, MuseV2_HW::StreamRawData, frequency);
 
 	serial_connection_.Write(cmd);

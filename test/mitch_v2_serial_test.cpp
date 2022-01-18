@@ -11,7 +11,7 @@ int main()
 
 		// Serial Connection object - input: Serial port
 		//Mitch_SerialConnection my_serial("/dev/ttyACM0"); 
-		MitchV2_SerialConnection my_serial("/dev/ttyACM0");
+		MitchV2_SerialConnection my_serial("COM4");
 
 		// Check if the device is connected
 		if (my_serial.checkConnectionStatus() == true) {
@@ -41,9 +41,13 @@ int main()
 
 				// Get clock offset
 				uint8_t* clock_offset = my_serial.getClockOffset();
-				for(int i = 0; i < sizeof(clock_offset); ++i)
-					printf("%02X ", clock_offset[i]);
-				printf("\n");
+				if (sizeof(clock_offset > 0)) {
+					for (int i = 0; i < sizeof(clock_offset); ++i)
+						printf("%02X ", clock_offset[i]);
+					printf("\n");
+				}
+				else
+					printf("Unable to read clock offset");
 
 				// Get the device battery voltage
 				float battery_voltage = my_serial.getBatteryVoltage();

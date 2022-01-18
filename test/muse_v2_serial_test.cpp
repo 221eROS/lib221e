@@ -11,7 +11,8 @@ int main()
 
 		// Serial Connection object - input: Serial port
 		//MuseV2_SerialConnection *my_serial = new MuseV2_SerialConnection("COM5");
-		MuseV2_SerialConnection my_serial("/dev/rfcomm0");
+		//MuseV2_SerialConnection my_serial("/dev/rfcomm0");
+		MuseV2_SerialConnection my_serial("COM5");
 
 		// Check if the device is connected
 		if (my_serial.checkConnectionStatus() == true) {
@@ -110,14 +111,14 @@ int main()
 			stream.str(string());
 
 			stream << "X" << "\t" << "Y" << "\t" << "Z" << "\n";
-			stream << setprecision(3) << fixed << gyroscope[0] << "\t" << gyroscope[1] << "\t" << gyroscope[2];
+			stream << setprecision(6) << fixed << gyroscope[0] << "\t" << gyroscope[1] << "\t" << gyroscope[2];
 
 			printf("Gyroscope Calibration params: \n %s \n", stream.str().c_str());
 
 			stream.str(string());
 
 			stream << "X" << "\t" << "Y" << "\t" << "Z" << "\t" << "offset" << "\n";
-			stream << setprecision(3) << fixed << accelerometer[0] << "\t" << accelerometer[1] << "\t" << accelerometer[2] << "\t" << accelerometer[9] << "\n";
+			stream << setprecision(6) << fixed << accelerometer[0] << "\t" << accelerometer[1] << "\t" << accelerometer[2] << "\t" << accelerometer[9] << "\n";
 			stream << accelerometer[3] << "\t" << accelerometer[4] << "\t" << accelerometer[5] << "\t" << accelerometer[10] << "\n";
 			stream << accelerometer[6] << "\t" << accelerometer[7] << "\t" << accelerometer[8] << "\t" << accelerometer[11];
 
@@ -126,7 +127,7 @@ int main()
 			stream.str(string());
 
 			stream << "X" << "\t" << "Y" << "\t" << "Z" << "\t" << "offset" << "\n";
-			stream << setprecision(3) << fixed << magnetometer[0] << "\t" << magnetometer[1] << "\t" << magnetometer[2] << "\t" << magnetometer[9] << "\n";
+			stream << setprecision(6) << fixed << magnetometer[0] << "\t" << magnetometer[1] << "\t" << magnetometer[2] << "\t" << magnetometer[9] << "\n";
 			stream << magnetometer[3] << "\t" << magnetometer[4] << "\t" << magnetometer[5] << "\t" << magnetometer[10] << "\n";
 			stream << magnetometer[6] << "\t" << magnetometer[7] << "\t" << magnetometer[8] << "\t" << magnetometer[11];
 
